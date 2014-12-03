@@ -1,0 +1,31 @@
+#JSGF V1.0;
+
+grammar commands;
+
+<basic_commands> = <start> | launch | land | stay | <go> | status | <turn> | <rotate> ;
+
+<start> = start engine | stop engine ;
+
+<go> = go (home | <direction> | to way point <digits>) ;
+
+<turn> = turn [negative] <digits> [degrees] ;
+
+<rotate> = rotate at <digits> [degrees per second] ;
+
+<direction> = (north | south | west | east | forward | backward | left | right | up | down) <digits> ;
+
+public <commands> = <basic_commands> ;
+
+<digit> = oh    |
+          zero  |
+          one   |
+          two   |
+          three |
+          four  |
+          five  |
+          six   |
+          seven |
+          eight |
+          nine  ;
+
+public <digits> = <digit>+;
