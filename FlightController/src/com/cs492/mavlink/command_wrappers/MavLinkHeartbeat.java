@@ -1,4 +1,4 @@
-package com.cs492.mavlink.commands;
+package com.cs492.mavlink.command_wrappers;
 
 import com.MAVLink.MAVLinkPacket;
 import com.MAVLink.common.msg_heartbeat;
@@ -8,7 +8,7 @@ import com.MAVLink.enums.MAV_TYPE;
 
 /**
  * This class contains logic used to send an heartbeat to a
- * {@link org.droidplanner.core.model.Drone}.
+ * {@link com.cs492.drone_model.droidplanner.core.model.Drone}.
  */
 public class MavLinkHeartbeat {
 
@@ -29,7 +29,7 @@ public class MavLinkHeartbeat {
 	private static final MAVLinkPacket sMsgPacket = sMsg.pack();
 
 	/**
-	 * Sends the heartbeat to the {@link org.droidplanner.core.model.Drone}
+	 * Sends the heartbeat to the {@link com.cs492.drone_model.droidplanner.core.model.Drone}
 	 * object.
 	 * 
 	 * @param drone

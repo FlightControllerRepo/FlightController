@@ -8,15 +8,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageButton;
 
+import com.cs492.drone_model.implementation.DroneObject;
 import com.cs492.flightcontroller.LogManager.LogSeverity;
-import com.cs492.mavlink.usb.UsbConnection;
 
 import edu.cmu.pocketsphinx.Assets;
 import edu.cmu.pocketsphinx.Hypothesis;
@@ -47,11 +50,14 @@ public class MainActivity extends Activity implements RecognitionListener {
         digits.put("nine", 9);
     }
 	
+	private static Context mainContext_;
+	
 	private SpeechRecognizer recognizer;
     private HashMap<String, Integer> captions;
     private final Map<String, Integer> digits = new HashMap<String, Integer>();
 	
     private ImageButton speechButton_;
+    private boolean isPressed = false;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,9 +66,31 @@ public class MainActivity extends Activity implements RecognitionListener {
         setContentView(R.layout.activity_main);
         getActionBar().setDisplayShowHomeEnabled(false); 
         
+        mainContext_ = this;
+        
         speechButton_ = (ImageButton) findViewById(R.id.speech_button);
-        UsbConnection connection = new UsbConnection(this);
-        connection.connect();    
+        speechButton_.setVisibility(View.INVISIBLE);
+        speechButton_.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch(motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        speechButton_.setImageResource(R.drawable.mic2);
+                        isPressed = true;
+                        return true;
+                    case MotionEvent.ACTION_UP:
+                        speechButton_.setImageResource(R.drawable.mic);
+                        isPressed = false;
+                        return true;
+                }
+                return false;
+            }
+        });
+        
+        if (!DroneObject.INSTANCE.isIntilized()) {
+	        DroneObject.INSTANCE.connect();
+	        DroneObject.INSTANCE.setupComponents();
+        }
         
         captions = new HashMap<String, Integer>();
         captions.put(COMMANDS_SEARCH, R.string.commands_caption);
@@ -87,6 +115,7 @@ public class MainActivity extends Activity implements RecognitionListener {
                     LogManager.INSTANCE.addEntry("Failed to init recognizer " + result, 
                     		LogSeverity.ERROR);
                 } else {
+                    speechButton_.setVisibility(View.VISIBLE);
                 	switchSearch(COMMANDS_SEARCH);
                 }
             }
@@ -118,23 +147,22 @@ public class MainActivity extends Activity implements RecognitionListener {
 
     @Override
     public void onPartialResult(Hypothesis hypothesis) {
-    	if (!speechButton_.isPressed()) return;
+    	if (!isPressed) return;
     	
         String text = hypothesis.getHypstr();
         if (text.equals(COMMANDS_SEARCH))
         	switchSearch(COMMANDS_SEARCH);
-        else
-            setResultText(text);
+        else{}
+            //setResultText(text);
     }
 
     private void setResultText(String text) {
-    	LogManager.INSTANCE.addEntry("Speech found:" + text, LogSeverity.INFO);
+    	LogManager.INSTANCE.addEntry("Speech found: " + text, LogSeverity.INFO);
     }
 
     @Override
     public void onResult(Hypothesis hypothesis) {
-    	if (!speechButton_.isPressed()) return;
-        
+    	if (!isPressed) return;
         if (hypothesis != null) {
             String text = hypothesis.getHypstr();
             setResultText(new QuadcopterCommands(digits).parseSpeech(text));
@@ -154,7 +182,7 @@ public class MainActivity extends Activity implements RecognitionListener {
         recognizer.stop();
         recognizer.startListening(searchName);
         String caption = getResources().getString(captions.get(searchName));
-        LogManager.INSTANCE.addEntry("Caption:" + caption, LogSeverity.INFO);
+        //LogManager.INSTANCE.addEntry("Caption:" + caption, LogSeverity.INFO);
     }
 
     private void setupRecognizer(File assetsDir) {
@@ -180,4 +208,20 @@ public class MainActivity extends Activity implements RecognitionListener {
         File languageModel = new File(modelsDir, "lm/weather.dmp");
         recognizer.addNgramSearch(FORECAST_SEARCH, languageModel);
     }
+
+	@Override
+	public void onError(Exception arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onTimeout() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public static Context getMainContext() {
+		return mainContext_;
+	}
 }

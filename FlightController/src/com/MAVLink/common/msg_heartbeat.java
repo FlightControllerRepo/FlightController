@@ -103,7 +103,7 @@ import com.MAVLink.Messages.MAVLinkPayload;
         * Returns a string with the MSG name and data
         */
         public String toString(){
-    	return "MAVLINK_MSG_ID_HEARTBEAT -"+" custom_mode:"+custom_mode+" type:"+type+" autopilot:"+autopilot+" base_mode:"+base_mode+" system_status:"+system_status+" mavlink_version:"+mavlink_version+"";
+    	return "MAVLINK_MSG_ID_HEARTBEAT -"+" custom_mode:"+custom_mode+" type:"+type+" autopilot:"+autopilot+" base_mode:"+Integer.toBinaryString(base_mode & 0xFF)+" system_status:"+system_status+" mavlink_version:"+mavlink_version+"";
         }
         }
         

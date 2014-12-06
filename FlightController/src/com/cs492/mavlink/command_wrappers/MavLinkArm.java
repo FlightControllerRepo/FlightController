@@ -1,9 +1,10 @@
-package com.cs492.mavlink.commands;
+package com.cs492.mavlink.command_wrappers;
 
 import com.MAVLink.MAVLinkPacket;
 import com.MAVLink.common.msg_command_long;
 import com.MAVLink.enums.MAV_CMD;
 import com.MAVLink.enums.MAV_COMPONENT;
+import com.cs492.drone_model.Drone;
 
 
 public class MavLinkArm {
@@ -14,10 +15,10 @@ public class MavLinkArm {
 	//Taken from MAV_CMD.java
 	public static final int MAV_CMD_COMPONENT_ARM_DISARM = 400;
 	
-	public static MAVLinkPacket sendArmMessage(boolean arm, byte sis, byte cis) { //Same but removed the drone parameter
+	public static MAVLinkPacket getArmMessagePacket(boolean arm, Drone drone) { //Same but removed the drone parameter
 
 		msg_command_long msg = new msg_command_long();
-		msg.target_system = sis;
+		msg.target_system = drone.getSysid();
 		msg.target_component = (byte) MAV_COMPONENT.MAV_COMP_ID_SYSTEM_CONTROL;
 
 		msg.command = MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM;//MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM;

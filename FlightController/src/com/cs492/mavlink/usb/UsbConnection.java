@@ -10,7 +10,7 @@ import android.hardware.usb.UsbManager;
 
 import com.cs492.flightcontroller.LogManager;
 import com.cs492.flightcontroller.LogManager.LogSeverity;
-import com.cs492.mavlink.MavLinkConnection;
+import com.cs492.mavlink_connection.MavLinkConnection;
 
 public class UsbConnection extends MavLinkConnection {
 
@@ -23,6 +23,7 @@ public class UsbConnection extends MavLinkConnection {
 
 	public UsbConnection(Context context) {
 		mContext = context;
+		mBaudRate = 57600;
 	}
 
 	@Override

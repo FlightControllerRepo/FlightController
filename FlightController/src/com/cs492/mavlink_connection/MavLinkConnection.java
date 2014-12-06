@@ -1,4 +1,4 @@
-package com.cs492.mavlink;
+package com.cs492.mavlink_connection;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,7 +10,6 @@ import com.MAVLink.Parser;
 import com.MAVLink.Messages.MAVLinkMessage;
 import com.cs492.flightcontroller.LogManager;
 import com.cs492.flightcontroller.LogManager.LogSeverity;
-import com.cs492.mavlink.commands.MavLinkArm;
 
 /**
  * Base for mavlink connection implementations.
@@ -39,17 +38,15 @@ public abstract class MavLinkConnection {
 	 * ConcurrentSkipListSet because the object will be accessed from multiple
 	 * threads concurrently.
 	 */
-	private final ArrayList<MavLinkConnectionListener> mListeners;
+	private final ArrayList<MavLinkConnectionListener> listeners_;
 
 	/**
 	 * Queue the set of packets to send via the mavlink connection. A thread
 	 * will be blocking on it until there's element(s) available to send.
 	 */
-	private final LinkedBlockingQueue<MAVLinkPacket> mPacketsToSend;
+	private final LinkedBlockingQueue<MAVLinkPacket> packetsToSend_;
 
 	private final AtomicInteger mConnectionStatus;
-	private boolean firstMsg;
-	private int armcount;
 
 	/**
 	 * Listen for incoming data on the mavlink connection.
@@ -120,7 +117,7 @@ public abstract class MavLinkConnection {
 
 			try {
 				while (mConnectionStatus.get() == MAVLINK_CONNECTED) {
-					final MAVLinkPacket packet = mPacketsToSend.take();
+					final MAVLinkPacket packet = packetsToSend_.take();
 					packet.seq = msgSeqNumber;
 					byte[] buffer = packet.encodePacket();
 
@@ -143,10 +140,9 @@ public abstract class MavLinkConnection {
 	private Thread mTaskThread;
 
 	public MavLinkConnection() {
-		mListeners = new ArrayList<MavLinkConnectionListener>();
-		mPacketsToSend = new LinkedBlockingQueue<MAVLinkPacket>();
+		listeners_ = new ArrayList<MavLinkConnectionListener>();
+		packetsToSend_ = new LinkedBlockingQueue<MAVLinkPacket>();
 		mConnectionStatus = new AtomicInteger(MAVLINK_DISCONNECTED);
-		armcount = 0;
 	}
 	
 	/**
@@ -187,7 +183,7 @@ public abstract class MavLinkConnection {
 	}
 
 	public void sendMavPacket(MAVLinkPacket packet) {
-		if (!mPacketsToSend.offer(packet)) {
+		if (!packetsToSend_.offer(packet)) {
 			
 		}
 	}
@@ -200,8 +196,8 @@ public abstract class MavLinkConnection {
 	 *            Listener tag
 	 */
 	public void addMavLinkConnectionListener(MavLinkConnectionListener listener) {
-		synchronized (mListeners) {
-			mListeners.add(listener);
+		synchronized (listeners_) {
+			listeners_.add(listener);
 			if (getConnectionStatus() == MAVLINK_CONNECTED) {
 				listener.onConnect();
 			}
@@ -215,8 +211,8 @@ public abstract class MavLinkConnection {
 	 *            Listener tag
 	 */
 	public void removeMavLinkConnectionListener(MavLinkConnectionListener listener) {
-		synchronized (mListeners) {
-			mListeners.remove(listener);
+		synchronized (listeners_) {
+			listeners_.remove(listener);
 		}
 	}
 
@@ -238,8 +234,8 @@ public abstract class MavLinkConnection {
 	 */
 	private void reportComError(String errMsg) {
 		LogManager.INSTANCE.addEntry("Reporting Error:" + errMsg, LogSeverity.INFO);
-		synchronized (mListeners) {
-			for (MavLinkConnectionListener listener : mListeners) {
+		synchronized (listeners_) {
+			for (MavLinkConnectionListener listener : listeners_) {
 				listener.onComError(errMsg);
 			}
 		}
@@ -251,8 +247,8 @@ public abstract class MavLinkConnection {
 	 */
 	private void reportConnect() {
 		LogManager.INSTANCE.addEntry("Reporting Connection", LogSeverity.INFO);
-		synchronized (mListeners) {
-			for (MavLinkConnectionListener listener : mListeners) 
+		synchronized (listeners_) {
+			for (MavLinkConnectionListener listener : listeners_) 
 				listener.onConnect();
 		}
 	}
@@ -263,8 +259,8 @@ public abstract class MavLinkConnection {
 	 */
 	private void reportDisconnect() {
 		LogManager.INSTANCE.addEntry("Reporting Disconnection", LogSeverity.INFO);
-		synchronized (mListeners) {
-			for (MavLinkConnectionListener listener : mListeners) 
+		synchronized (listeners_) {
+			for (MavLinkConnectionListener listener : listeners_) 
 				listener.onDisconnect();
 		}
 	}
@@ -275,19 +271,10 @@ public abstract class MavLinkConnection {
 	 * @param msg
 	 *            received mavlink message
 	 */
-	private void reportReceivedMessage(MAVLinkMessage msg) {
-		if (armcount  == 4) {
-			this.sendMavPacket(MavLinkArm.sendArmMessage(true, (byte)msg.sysid, (byte) msg.compid));
-			LogManager.INSTANCE.addEntry("Sending ARM", LogSeverity.WARNING);
-		}
-		armcount ++;
-	
-		LogManager.INSTANCE.addEntry("Reporting Received Message:" + msg, LogSeverity.INFO);
-		
-		//sendMavPacket(MavLinkHeartbeat.sendMavHeartbeat());
-		
-		synchronized (mListeners) {
-			for (MavLinkConnectionListener listener : mListeners) 
+	private void reportReceivedMessage(MAVLinkMessage msg) {		
+		//LogManager.INSTANCE.addEntry("Reporting Received Message:" + msg, LogSeverity.INFO);
+		synchronized (listeners_) {
+			for (MavLinkConnectionListener listener : listeners_) 
 				listener.onReceiveMessage(msg);
 		}
 	}

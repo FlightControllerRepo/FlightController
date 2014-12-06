@@ -1,4 +1,4 @@
-package com.cs492.mavlink;
+package com.cs492.mavlink_connection;
 
 import com.MAVLink.Messages.MAVLinkMessage;
 
