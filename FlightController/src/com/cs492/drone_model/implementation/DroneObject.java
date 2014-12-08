@@ -7,6 +7,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import com.MAVLink.MAVLinkPacket;
 import com.MAVLink.Messages.ApmModes;
 import com.MAVLink.Messages.MAVLinkMessage;
+import com.MAVLink.enums.MAV_DATA_STREAM;
 import com.cs492.drone_model.Drone;
 import com.cs492.drone_model.DroneAttribute;
 import com.cs492.drone_model.DroneEvent;
@@ -17,6 +18,7 @@ import com.cs492.flightcontroller.LogManager;
 import com.cs492.flightcontroller.LogManager.LogSeverity;
 import com.cs492.flightcontroller.MainActivity;
 import com.cs492.mavlink.command_wrappers.MavLinkModes;
+import com.cs492.mavlink.command_wrappers.MavLinkStreamRates;
 import com.cs492.mavlink.usb.UsbConnection;
 import com.cs492.mavlink_connection.MavLinkConnectionListener;
 
@@ -71,8 +73,11 @@ public enum DroneObject implements Drone, MavLinkConnectionListener {
 
 	@Override
 	public void postEvent(DroneEvent event) {
-		if (event == DroneEvent.HEARTBEAT_FIRST)
+		if (event == DroneEvent.HEARTBEAT_FIRST) {
 			sendPacket(MavLinkModes.changeFlightMode(ApmModes.ROTOR_LOITER, this));
+			sendPacket(MavLinkStreamRates.getStreamRequestPacket(this, MAV_DATA_STREAM.MAV_DATA_STREAM_POSITION, 500));
+			sendPacket(MavLinkStreamRates.getStreamRequestPacket(this, MAV_DATA_STREAM.MAV_DATA_STREAM_RAW_SENSORS, 500));
+		}
 		
 		for (DroneEventListener lis : listeners_)
 			lis.onDroneEvent(event, this);

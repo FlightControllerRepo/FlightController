@@ -20,6 +20,8 @@ import android.widget.ImageButton;
 
 import com.cs492.drone_model.implementation.DroneObject;
 import com.cs492.flightcontroller.LogManager.LogSeverity;
+import com.cs492.mavlink.command_wrappers.MavLinkArm;
+import com.cs492.mavlink.command_wrappers.MavLinkTakeoff;
 
 import edu.cmu.pocketsphinx.Assets;
 import edu.cmu.pocketsphinx.Hypothesis;
@@ -75,10 +77,32 @@ public class MainActivity extends Activity implements RecognitionListener {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch(motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                    	DroneObject.INSTANCE.sendPacket(MavLinkArm.getArmMessagePacket(true, DroneObject.INSTANCE));
                         speechButton_.setImageResource(R.drawable.mic2);
-                        isPressed = true;
+                        //isPressed = true;
                         return true;
                     case MotionEvent.ACTION_UP:
+             
+                        speechButton_.setImageResource(R.drawable.mic);
+                        isPressed = false;
+                        return true;
+                }
+                return false;
+            }
+        });
+        
+        ImageButton tempButton_ = (ImageButton) findViewById(R.id.takeoff_button);
+        tempButton_.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch(motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                    	DroneObject.INSTANCE.sendPacket(MavLinkTakeoff.getSendTakeoffPacket(DroneObject.INSTANCE, 2));
+                        speechButton_.setImageResource(R.drawable.mic2);
+                        //isPressed = true;
+                        return true;
+                    case MotionEvent.ACTION_UP:
+                    	DroneObject.INSTANCE.sendPacket(MavLinkTakeoff.getSendTakeoffPacket(DroneObject.INSTANCE, 0));
                         speechButton_.setImageResource(R.drawable.mic);
                         isPressed = false;
                         return true;
