@@ -9,8 +9,6 @@ import com.cs492.drone_model.DroneEvent;
 import com.cs492.drone_model.DroneEvent.DroneEventListener;
 import com.cs492.drone_model.DroneVariable;
 import com.cs492.drone_model.implementation.DroneObject;
-import com.cs492.flightcontroller.LogManager;
-import com.cs492.flightcontroller.LogManager.LogSeverity;
 import com.cs492.mavlink.command_wrappers.MavLinkParameters;
 
 /**

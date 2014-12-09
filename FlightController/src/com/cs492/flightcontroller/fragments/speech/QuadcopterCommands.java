@@ -3,12 +3,12 @@ package com.cs492.flightcontroller.fragments.speech;
 
 import java.util.Map;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+
 import com.cs492.drone_model.DroneActions;
 import com.cs492.drone_model.implementation.DroneObject;
 import com.cs492.flightcontroller.MainActivity;
-
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 
 public class QuadcopterCommands {
 

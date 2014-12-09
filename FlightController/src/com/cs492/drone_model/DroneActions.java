@@ -22,13 +22,13 @@ public class DroneActions {
 	}
 	
 	public static void guidedTakeoff(Drone drone, float altmeters) {
-		if (!drone.isInAir()) return;
+		//if (!drone.isInAir()) return;
 		drone.sendPacket(MavLinkModes.getChangeFlightModePacket(ApmModes.ROTOR_GUIDED, drone));
 		drone.sendPacket(MavLinkTakeoff.getTakeoffPacket(drone, altmeters));
 	}
 	
 	public static void guidedLand(Drone drone) {
-		if (drone.isInAir()) return;
+		//if (drone.isInAir()) return;
 		drone.sendPacket(MavLinkModes.getChangeFlightModePacket(ApmModes.ROTOR_LAND, drone));
 	}
 	
