@@ -2,11 +2,10 @@ package com.cs492.drone_model.attributes;
 
 import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.common.msg_attitude;
-import com.MAVLink.common.msg_nav_controller_output;
 import com.MAVLink.common.msg_vfr_hud;
-import com.cs492.drone_model.DroneAttribute;
+import com.cs492.drone_model.DroneVariable;
 
-public class Orientation extends DroneAttribute {
+public class Orientation extends DroneVariable {
 
 	private float altitude_;
 	private float pitch_;
@@ -36,6 +35,22 @@ public class Orientation extends DroneAttribute {
 		}
 	}	
 
+	public float getAltitude() {
+		return altitude_;
+	}
+	
+	public float getPitch() { 
+		return pitch_;
+	}
+	
+	public float getRoll() { 
+		return roll_;
+	}
+	
+	public float getYaw() {
+		return yaw_;
+	}
+	
 	@Override
 	public String getIdentifier() {
 		return "Orientation";

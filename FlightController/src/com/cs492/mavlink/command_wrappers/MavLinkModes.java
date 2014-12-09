@@ -46,7 +46,7 @@ public class MavLinkModes {
 		drone.getMavClient().sendMavPacket(msg.pack());
 	}*/
 
-	public static MAVLinkPacket changeFlightMode(ApmModes mode, Drone drone) {
+	public static MAVLinkPacket getChangeFlightModePacket(ApmModes mode, Drone drone) {
 		msg_set_mode msg = new msg_set_mode();
 		msg.target_system = drone.getSysid();
 		msg.base_mode = 1; // TODO use meaningful constant

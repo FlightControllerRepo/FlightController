@@ -2,9 +2,9 @@ package com.cs492.drone_model.attributes;
 
 import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.common.msg_global_position_int;
-import com.cs492.drone_model.DroneAttribute;
+import com.cs492.drone_model.DroneVariable;
 
-public class GPSPosition extends DroneAttribute {
+public class GPSPosition extends DroneVariable {
 
 	private float latitude_;
 	private float longitude_;

@@ -3,6 +3,8 @@ package com.cs492.flightcontroller;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.cs492.flightcontroller.fragments.LoggerFragment;
+
 public enum LogManager {
     INSTANCE;
     
@@ -23,7 +25,7 @@ public enum LogManager {
     public synchronized void addEntry(String message, LogSeverity severity) {
     	LogEntry newEntry = new LogEntry(severity, message);
     	entries_.add(newEntry);
-    	LogActivity.appendText(newEntry + "<br>");
+    	LoggerFragment.appendText(newEntry + "<br>");
     }
     
     public String getLogText() {

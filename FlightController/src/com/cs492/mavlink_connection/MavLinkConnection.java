@@ -197,7 +197,9 @@ public abstract class MavLinkConnection {
 	 */
 	public void addMavLinkConnectionListener(MavLinkConnectionListener listener) {
 		synchronized (listeners_) {
-			listeners_.add(listener);
+			if (!listeners_.contains(listener))
+				listeners_.add(listener);
+			
 			if (getConnectionStatus() == MAVLINK_CONNECTED) {
 				listener.onConnect();
 			}

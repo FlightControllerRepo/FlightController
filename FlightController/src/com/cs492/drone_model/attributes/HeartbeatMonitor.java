@@ -3,12 +3,12 @@ package com.cs492.drone_model.attributes;
 import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.common.msg_heartbeat;
 import com.MAVLink.enums.MAV_MODE_FLAG;
-import com.cs492.drone_model.DroneAttribute;
 import com.cs492.drone_model.DroneEvent;
+import com.cs492.drone_model.DroneVariable;
 import com.cs492.flightcontroller.LogManager;
 import com.cs492.flightcontroller.LogManager.LogSeverity;
 
-public class HeartbeatMonitor extends DroneAttribute {
+public class HeartbeatMonitor extends DroneVariable {
 
 	private boolean firstHeartbeat_;
 	private msg_heartbeat previousHeartbeat_;
@@ -42,6 +42,9 @@ public class HeartbeatMonitor extends DroneAttribute {
 	}
 
 	public boolean isArmed() {
+		if (previousHeartbeat_ == null)
+			return false;		
+		
 		return (previousHeartbeat_.base_mode & (byte) MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED) ==
 				(byte) MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED;
 	}

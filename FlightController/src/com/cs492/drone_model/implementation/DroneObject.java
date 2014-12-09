@@ -9,10 +9,12 @@ import com.MAVLink.Messages.ApmModes;
 import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.enums.MAV_DATA_STREAM;
 import com.cs492.drone_model.Drone;
-import com.cs492.drone_model.DroneAttribute;
 import com.cs492.drone_model.DroneEvent;
-import com.cs492.drone_model.DroneEventListener;
+import com.cs492.drone_model.DroneEvent.DroneEventListener;
+import com.cs492.drone_model.DroneVariable;
+import com.cs492.drone_model.attributes.GPSPosition;
 import com.cs492.drone_model.attributes.HeartbeatMonitor;
+import com.cs492.drone_model.attributes.Orientation;
 import com.cs492.drone_model.attributes.parameters.Parameters;
 import com.cs492.flightcontroller.LogManager;
 import com.cs492.flightcontroller.LogManager.LogSeverity;
@@ -33,16 +35,16 @@ public enum DroneObject implements Drone, MavLinkConnectionListener {
 	private byte sysid_;
 	private byte componentid_;
 	
-	private ConcurrentSkipListMap<Integer, ArrayList<DroneAttribute> > messageHandlers_;
-	private ConcurrentSkipListMap<String, DroneAttribute> attributes_;
+	private ConcurrentSkipListMap<Integer, ArrayList<DroneVariable> > messageHandlers_;
+	private ConcurrentSkipListMap<String, DroneVariable> attributes_;
 	
 	private DroneObject() {
 		listeners_ = new CopyOnWriteArrayList<DroneEventListener>();
 		
 		sysid_ = componentid_ = -1;
 		connected_ = false;
-		attributes_ = new ConcurrentSkipListMap<String, DroneAttribute>();
-		messageHandlers_ = new ConcurrentSkipListMap<Integer, ArrayList<DroneAttribute> >();
+		attributes_ = new ConcurrentSkipListMap<String, DroneVariable>();
+		messageHandlers_ = new ConcurrentSkipListMap<Integer, ArrayList<DroneVariable> >();
 	}
 	
 	@Override
@@ -54,11 +56,17 @@ public enum DroneObject implements Drone, MavLinkConnectionListener {
 		connection_.connect();
 	}
 	
+	public void disconnect() {
+		connection_.disconnect();
+	}
+	
 	@Override
 	public void setupComponents() {
 		LogManager.INSTANCE.addEntry("Setting up components", LogSeverity.INFO);
-		addDroneAttribute(new Parameters());
-		addDroneAttribute(new HeartbeatMonitor());
+		addDroneVariable(new Parameters());
+		addDroneVariable(new HeartbeatMonitor());
+		addDroneVariable(new GPSPosition());
+		addDroneVariable(new Orientation());
 	}
 	
 	@Override
@@ -73,14 +81,17 @@ public enum DroneObject implements Drone, MavLinkConnectionListener {
 
 	@Override
 	public void postEvent(DroneEvent event) {
+		try {
 		if (event == DroneEvent.HEARTBEAT_FIRST) {
-			sendPacket(MavLinkModes.changeFlightMode(ApmModes.ROTOR_LOITER, this));
+			sendPacket(MavLinkModes.getChangeFlightModePacket(ApmModes.ROTOR_LOITER, this));
 			sendPacket(MavLinkStreamRates.getStreamRequestPacket(this, MAV_DATA_STREAM.MAV_DATA_STREAM_POSITION, 500));
 			sendPacket(MavLinkStreamRates.getStreamRequestPacket(this, MAV_DATA_STREAM.MAV_DATA_STREAM_RAW_SENSORS, 500));
 		}
 		
+		LogManager.INSTANCE.addEntry("POSTING event" + event.name(), LogSeverity.INFO);
 		for (DroneEventListener lis : listeners_)
 			lis.onDroneEvent(event, this);
+		} catch (Exception ex) { LogManager.INSTANCE.addEntry(LogManager.stringFromException(ex), LogSeverity.ERROR); }
 	}
 	
 	@Override
@@ -94,12 +105,17 @@ public enum DroneObject implements Drone, MavLinkConnectionListener {
 		listeners_.add(listener);
 	}
 	
+	@Override
+	public void removeDroneEventListener(DroneEventListener listener) {
+		listeners_.remove(listener);
+	}
+	
 	@Override 
-	public void addDroneAttribute(DroneAttribute attrib) {
+	public void addDroneVariable(DroneVariable attrib) {
 		attrib.setDrone(this);
 		for (Integer type : attrib.getMessageHandleTypes()) {
 			if (!messageHandlers_.containsKey(type))
-				messageHandlers_.put(type, new ArrayList<DroneAttribute>());
+				messageHandlers_.put(type, new ArrayList<DroneVariable>());
 		
 			if (!messageHandlers_.get(type).contains(attrib))
 				messageHandlers_.get(type).add(attrib);
@@ -107,18 +123,20 @@ public enum DroneObject implements Drone, MavLinkConnectionListener {
 		attributes_.put(attrib.getIdentifier(), attrib);
 	}
 	
-	public DroneAttribute getDroneAttribute(String string) {
+	public DroneVariable getDroneAttribute(String string) {
 		return attributes_.get(string);
 	}
 	
 	@Override
-	public void onConnect() {
+	public void onConnect() {	
 		connected_ = true;
+		postEvent(DroneEvent.CONNECTED);
 	}
 	
 	@Override
 	public void onDisconnect() {
 		connected_ = false;
+		postEvent(DroneEvent.DISCONNECTED);
 	}
 
 	@Override
@@ -130,7 +148,7 @@ public enum DroneObject implements Drone, MavLinkConnectionListener {
 		
 		try {
 			if (!messageHandlers_.containsKey(msg.msgid)) return;
-			for (DroneAttribute v : messageHandlers_.get(msg.msgid))
+			for (DroneVariable v : messageHandlers_.get(msg.msgid))
 				v.handleMessage(msg);
 		} catch (Exception ex) { LogManager.INSTANCE.addEntry(LogManager.stringFromException(ex), LogSeverity.ERROR); }
 	}
@@ -140,6 +158,25 @@ public enum DroneObject implements Drone, MavLinkConnectionListener {
 
 	public boolean isIntilized() {
 		return attributes_.size() > 0;
+	}
+	
+	public boolean isConnected() { 
+		return connected_;
+	}
+
+	public boolean isArmed() {
+		return ((HeartbeatMonitor) getDroneAttribute("HeartbeatMonitor")).isArmed();
+	}
+
+	public boolean isInAir() {
+		return false;
+	}
+
+	public void addUSBListener(MavLinkConnectionListener listener) {
+		if (connection_ == null)
+			connection_ = new UsbConnection(MainActivity.getMainContext());
+		
+		connection_.addMavLinkConnectionListener(listener);
 	}
 	
 }

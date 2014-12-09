@@ -1,7 +1,14 @@
 package com.cs492.drone_model;
 
+
 public enum DroneEvent {
 
-	HEARTBEAT_FIRST, GPS_CHANGED, DISARMED, ARMED;
+	CONNECTED, DISCONNECTED, HEARTBEAT_FIRST, GPS_CHANGED, DISARMED, ARMED;
+	
+	public interface DroneEventListener {
+	
+		void onDroneEvent(DroneEvent event, Drone drone);
+
+	}
 	
 }

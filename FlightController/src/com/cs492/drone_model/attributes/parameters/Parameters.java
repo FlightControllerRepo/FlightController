@@ -5,9 +5,9 @@ import java.util.TreeMap;
 import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.common.msg_param_value;
 import com.cs492.drone_model.Drone;
-import com.cs492.drone_model.DroneAttribute;
 import com.cs492.drone_model.DroneEvent;
-import com.cs492.drone_model.DroneEventListener;
+import com.cs492.drone_model.DroneEvent.DroneEventListener;
+import com.cs492.drone_model.DroneVariable;
 import com.cs492.drone_model.implementation.DroneObject;
 import com.cs492.flightcontroller.LogManager;
 import com.cs492.flightcontroller.LogManager.LogSeverity;
@@ -18,7 +18,7 @@ import com.cs492.mavlink.command_wrappers.MavLinkParameters;
  * parameters DONT include battery, altitude, but rather hardware/firmware
  * specific settings.
  */
-public class Parameters extends DroneAttribute implements DroneEventListener {
+public class Parameters extends DroneVariable implements DroneEventListener {
 
 	private TreeMap<Integer, Parameter> parameters;
 
@@ -77,7 +77,6 @@ public class Parameters extends DroneAttribute implements DroneEventListener {
 		Parameter param = new Parameter(param_msg);
 			
 		synchronized(parameters) {
-			LogManager.INSTANCE.addEntry("Adding param:" + param.name, LogSeverity.INFO);
 			parameters.put((int) param_msg.param_index, param);
 		}
 		

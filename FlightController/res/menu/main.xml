@@ -2,9 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.flightcontroller.MainActivity" >
 
-    <item android:id="@+id/action_log"
-          android:icon="@drawable/ic_action_storage"
-          android:title="logs"
+    <item android:id="@+id/connect_disconnect_ab"
+          android:title="Connect"
           android:showAsAction="ifRoom" />
 
 </menu>
