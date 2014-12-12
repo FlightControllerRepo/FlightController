@@ -10,14 +10,20 @@ import com.cs492.drone_model.DroneActions;
 import com.cs492.drone_model.implementation.DroneObject;
 import com.cs492.flightcontroller.MainActivity;
 
+/**
+* Class to parse the recognized speech into commands for the quadcopter.
+*/
 public class QuadcopterCommands {
 
-    private Map<String, Integer> digits;
+    private Map<String, Integer> digits; // map from the word representation of digits to the digits themselves.
 
     public QuadcopterCommands(Map<String, Integer> digits) {
         this.digits = digits;
     }
 
+    /**
+    * parse the speech. once the desired command is known, display an alert on the screen asking the user to confirm the command.
+    */
     protected void parseSpeech(final String speech) {
     	DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
     	    @Override
@@ -75,6 +81,9 @@ public class QuadcopterCommands {
         	    .setNegativeButton("No", dialogClickListener).show();    
     }
 
+    /**
+    * parse instances of numbers found in the input string into their numeric value ("one two three" -> 123)
+    */
     private int parseNumbers(String speech) {
         int retVal = 0;
         for (String token : speech.split("\\s+")) {

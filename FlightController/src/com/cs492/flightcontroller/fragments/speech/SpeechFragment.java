@@ -26,12 +26,18 @@ import edu.cmu.pocketsphinx.Hypothesis;
 import edu.cmu.pocketsphinx.RecognitionListener;
 import edu.cmu.pocketsphinx.SpeechRecognizer;
 
+/**
+* Fragment that deals with the speech recognition. includes the button that enables speech and alerts to confirm speech.
+*/
 public class SpeechFragment extends Fragment implements RecognitionListener {
 
 	private static final String KWS_SEARCH = "wakeup";
 	private static final String KEYPHRASE = "start";
 	private static final String COMMANDS_SEARCH = "commands";
 	
+    /**
+    * initialize the digits map that will be used to recognize numbers in speech.
+    */
 	private void initializeDigitsMap() {
         digits.put("oh", 0);
         digits.put("zero", 0);
@@ -53,6 +59,9 @@ public class SpeechFragment extends Fragment implements RecognitionListener {
     private ImageButton speechButton_;
     private boolean isPressed = false;
     
+    /**
+    * initialize the view. initialize an invisible speech button, which will be made visible when the recognizer is ready.
+    */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View V = inflater.inflate(R.layout.fragment_speech, container, false);
@@ -85,6 +94,7 @@ public class SpeechFragment extends Fragment implements RecognitionListener {
         captions.put(COMMANDS_SEARCH, R.string.commands_caption);
         initializeDigitsMap();
         
+        //initialize the sphinx engine. once it is ready, make the speech button visible.
         new AsyncTask<Void, Void, Exception>() {
             @Override
             protected Exception doInBackground(Void... params) {
@@ -112,7 +122,9 @@ public class SpeechFragment extends Fragment implements RecognitionListener {
         return V;
     }
 
- 
+    /**
+    * method called when sphinx detects a partial result. we don't need to do anything here.
+    */
     @Override
     public void onPartialResult(Hypothesis hypothesis) {
     	if ( hypothesis == null) return;
@@ -121,6 +133,9 @@ public class SpeechFragment extends Fragment implements RecognitionListener {
         LogManager.INSTANCE.addEntry("Partial speech found: " + text, LogSeverity.INFO);
     }
 
+    /**
+    * method called when sphinx gets a full result. parse the detected speech.
+    */
     @Override
     public void onResult(Hypothesis hypothesis) {
         if (hypothesis != null) {
@@ -139,6 +154,9 @@ public class SpeechFragment extends Fragment implements RecognitionListener {
     	
     }
 
+    /**
+    * set up the recognizer by referencing the grammar and dictionary
+    */
     private void setupRecognizer(File assetsDir) {
         File modelsDir = new File(assetsDir, "models");
         recognizer = defaultSetup()
