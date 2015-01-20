@@ -1,0 +1,36 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/event_button"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="37dp"
+    android:layout_margin="1dp"
+    android:textColor="#FFFFFF"
+    android:animateLayoutChanges="true" >
+
+    <Space android:id="@+id/dummy"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible"/>
+
+    <com.pnikosis.materialishprogress.ProgressWheel
+        android:id="@+id/event_btn_progress"
+        android:animateLayoutChanges="true"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="invisible"/>
+
+    <TextView
+        android:id="@+id/event_btn_text"
+        android:gravity="center"
+        android:animateLayoutChanges="true"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:textColor="@android:color/black"/>
+
+</RelativeLayout>

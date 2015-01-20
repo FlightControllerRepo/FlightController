@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="?android:attr/buttonBarStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="48dp"
+    android:layout_gravity="top"
+    android:gravity="top">
+
+    <View
+        android:id="@+id/style_line_ab"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_height="match_parent"
+        android:layout_width="2dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:background="@android:color/darker_gray"/>
+
+    <ImageView
+        android:id="@+id/speech_ab"
+        style="?android:attr/buttonBarButtonStyle"
+        android:gravity="start"
+        android:src="@drawable/ic_action_mic"
+        android:layout_toRightOf="@id/style_line_ab"
+        android:layout_centerVertical="true"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content" />
+
+    <TextView
+        android:id="@+id/connect_disconnect_ab"
+        style="?android:attr/buttonBarButtonStyle"
+        android:gravity="center"
+        android:text="Connect"
+        android:textColor="@android:color/black"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="8dp"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content" />
+
+
+
+</RelativeLayout>
