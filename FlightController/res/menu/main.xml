@@ -1,9 +1,0 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.flightcontroller.MainActivity" >
-
-    <item android:id="@+id/connect_disconnect_ab"
-          android:title="Connect"
-          android:showAsAction="ifRoom" />
-
-</menu>
