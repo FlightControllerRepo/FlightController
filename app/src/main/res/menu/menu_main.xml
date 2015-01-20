@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
+    <item android:id="@+id/speech_ab"
+        android:gravity="left"
+        android:title="Speech"
+        android:icon="@drawable/ic_action_mic"
+        app:showAsAction="ifRoom" />
+
+    <item android:id="@+id/connect_disconnect_ab"
+        android:title="Connect"
+        app:showAsAction="ifRoom" />
+</menu>
