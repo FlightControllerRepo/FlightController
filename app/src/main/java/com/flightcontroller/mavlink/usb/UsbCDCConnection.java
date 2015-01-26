@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.util.List;
 
 class UsbCDCConnection extends UsbConnection.UsbConnectionImpl {
-	private static final String TAG = UsbCDCConnection.class.getSimpleName();
 
 	private UsbSerialPort port_;
 
@@ -104,10 +103,5 @@ class UsbCDCConnection extends UsbConnection.UsbConnectionImpl {
 			}
             port_ = null;
 		}
-	}
-
-	@Override
-	public String toString() {
-		return TAG;
 	}
 }

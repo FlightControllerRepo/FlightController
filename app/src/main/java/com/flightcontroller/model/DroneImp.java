@@ -24,6 +24,13 @@ import java.util.ArrayList;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * Our Drone implementation. This class is implemented as a singleton, since
+ * the original specification on required us to command a single drone. However
+ * it should not be hard to extend functionality to multiple Copters, using
+ * this class a a starting point.
+ *
+ */
 public enum DroneImp implements Drone, MavLinkConnectionListener {
 	INSTANCE;
 

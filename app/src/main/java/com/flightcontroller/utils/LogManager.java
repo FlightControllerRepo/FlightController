@@ -1,6 +1,6 @@
 package com.flightcontroller.utils;
 
-import com.flightcontroller.ui.LoggerFragment;
+import com.flightcontroller.ui.LoggerActivity;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,7 +25,7 @@ public enum LogManager {
     public synchronized void addEntry(String message, LogSeverity severity) {
     	LogEntry newEntry = new LogEntry(severity, message);
     	entries_.add(newEntry);
-    	LoggerFragment.appendText(newEntry + "<br>");
+    	LoggerActivity.appendText(newEntry + "<br>");
     }
     
     public String getLogText() {

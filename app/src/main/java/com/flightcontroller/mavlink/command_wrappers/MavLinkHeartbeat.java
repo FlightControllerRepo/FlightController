@@ -7,8 +7,7 @@ import com.MAVLink.enums.MAV_TYPE;
 
 
 /**
- * This class contains logic used to send an heartbeat to a
- * {@link com.cs492.drone_model.droidplanner.core.model.Drone}.
+ * This class contains logic used to send an heartbeat
  */
 public class MavLinkHeartbeat {
 
@@ -28,14 +27,7 @@ public class MavLinkHeartbeat {
 	 */
 	private static final MAVLinkPacket sMsgPacket = sMsg.pack();
 
-	/**
-	 * Sends the heartbeat to the {@link com.cs492.drone_model.droidplanner.core.model.Drone}
-	 * object.
-	 * 
-	 * @param drone
-	 *            drone to send the heartbeat to
-	 */
-	public static MAVLinkPacket sendMavHeartbeat() {
+	public static MAVLinkPacket getMavHeartbeatPacket() {
 		return sMsgPacket;
 	}
 

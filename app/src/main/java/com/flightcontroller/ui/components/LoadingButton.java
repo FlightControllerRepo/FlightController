@@ -18,12 +18,13 @@ public class LoadingButton extends RelativeLayout {
 
     private CopyOnWriteArrayList<LoadingButtonListener> listeners_;
 
+    private boolean enabled_;
     private boolean waiting_;
 
 	private TextView textView_;
 	private ProgressWheel progress_;
-	
-	public LoadingButton(Context context, AttributeSet attrs) {
+
+    public LoadingButton(Context context, AttributeSet attrs) {
 	    super(context, attrs);
 	    initComponents(context);
 	}
@@ -41,6 +42,7 @@ public class LoadingButton extends RelativeLayout {
 	private void initComponents(Context context) {
         inflate(context, R.layout.loading_button, this);
 
+        enabled_ = true;
         waiting_ = false;
         listeners_ = new CopyOnWriteArrayList<>();
 
@@ -95,7 +97,7 @@ public class LoadingButton extends RelativeLayout {
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent event) {
 	     super.dispatchTouchEvent(event);
-         if (waiting_)
+         if (waiting_ || !enabled_)
             return true;
 
 	     switch (event.getAction()) {
@@ -139,6 +141,18 @@ public class LoadingButton extends RelativeLayout {
 
     public interface LoadingButtonListener {
         void onPressed(LoadingButton loadingButton);
+    }
+
+    public void setEnabled(boolean enabled) {
+        enabled_ = enabled;
+        if (enabled_) {
+            getBackground().setAlpha(255);
+            textView_.setTextColor(Color.argb(255, 255, 0, 0));
+        } else {
+            getBackground().setAlpha(125);
+            textView_.setTextColor(Color.argb(125, 255, 255, 255));
+        }
+
     }
 
 }

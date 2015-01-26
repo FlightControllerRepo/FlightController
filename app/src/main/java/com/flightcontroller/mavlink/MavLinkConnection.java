@@ -57,8 +57,6 @@ public abstract class MavLinkConnection {
 		public void run() {
 			Thread sendingThread = null;
 
-			// Load the connection specific preferences
-			loadPreferences();
 			try {
 				// Open the connection
 				openConnection();
@@ -193,8 +191,6 @@ public abstract class MavLinkConnection {
 	 * Adds a listener to the mavlink connection.
 	 * 
 	 * @param listener
-	 * @param tag
-	 *            Listener tag
 	 */
 	public void addMavLinkConnectionListener(MavLinkConnectionListener listener) {
 		synchronized (listeners_) {
@@ -209,9 +205,6 @@ public abstract class MavLinkConnection {
 
 	/**
 	 * Removes the specified listener.
-	 * 
-	 * @param tag
-	 *            Listener tag
 	 */
 	public void removeMavLinkConnectionListener(MavLinkConnectionListener listener) {
 		synchronized (listeners_) {
@@ -226,8 +219,6 @@ public abstract class MavLinkConnection {
 	protected abstract void sendBuffer(byte[] buffer) throws IOException;
 
 	protected abstract void closeConnection() throws IOException;
-
-	protected abstract void loadPreferences();
 
 	/**
 	 * Utility method to notify the mavlink listeners about communication

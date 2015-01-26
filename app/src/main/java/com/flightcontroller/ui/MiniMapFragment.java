@@ -28,10 +28,19 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * Our minimap fragment which shows the location of our helicopter. It also
+ * allows the user to select locations on the map to have the copter
+ * to travel too
+ *
+ */
 public class MiniMapFragment extends MapFragment implements GoogleMap.OnMapClickListener {
 
     private static final String SUPPORT_MAP_BUNDLE_KEY = "MapOptions";
 
+    /**
+     * Updates the location of the copter on our map
+     */
     private Timer copterUpdator_;
 
     private Marker copterMarker_;
@@ -59,6 +68,7 @@ public class MiniMapFragment extends MapFragment implements GoogleMap.OnMapClick
         googleMap_.setMyLocationEnabled(true);
         googleMap_.setOnMapClickListener(this);
 
+        //allow us to get our location
         final LocationManager locationManager = (LocationManager) MainActivity.getMainContext()
                 .getSystemService(Activity.LOCATION_SERVICE);
 
@@ -78,6 +88,7 @@ public class MiniMapFragment extends MapFragment implements GoogleMap.OnMapClick
         String provider = locationManager.getBestProvider(criteria, true);
         locationManager.requestLocationUpdates(provider, 20000L, 0.0f, locationListener);
 
+        //schedule a timer to draw our copter frequently
         copterUpdator_ = new Timer();
         copterUpdator_.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -96,6 +107,7 @@ public class MiniMapFragment extends MapFragment implements GoogleMap.OnMapClick
         mainHandler.post(new Runnable() {
             @Override
             public void run() {
+                //on a click setup a button to confirm navigation
                 final Marker gohere = googleMap_.addMarker(new MarkerOptions()
                         .position(location)
                         .title("Go Here")
@@ -115,6 +127,9 @@ public class MiniMapFragment extends MapFragment implements GoogleMap.OnMapClick
         });
     }
 
+    /**
+     * Draws our helicopter on our google map
+     */
     private void drawCopter() {
         final GPSPosition gps = (GPSPosition) DroneImp.INSTANCE.getDroneAttribute("GPSPosition");
         final LatLng location = new LatLng(gps.getLatitude(), gps.getLongitude());

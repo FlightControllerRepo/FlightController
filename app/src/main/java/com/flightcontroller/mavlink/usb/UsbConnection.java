@@ -34,19 +34,6 @@ public class UsbConnection extends MavLinkConnection {
 	}
 
 	@Override
-	protected void loadPreferences() {
-		String baud_type = "57600";//prefs.getString("pref_baud_type", "57600");
-		if (baud_type.equals("38400"))
-			mBaudRate = 38400;
-		else if (baud_type.equals("57600"))
-			mBaudRate = 57600;
-		else
-			mBaudRate = 115200;
-		
-		mBaudRate = 57600;
-	}
-
-	@Override
 	protected void openConnection() throws IOException {
 		if (mUsbConnection != null) {
 			try {

@@ -12,7 +12,9 @@ import com.flightcontroller.model.DroneEvent;
 import com.flightcontroller.model.DroneImp;
 
 /**
- * Created by Nicholas on 1/17/15.
+ * View for the 2 buttons at the botton of the screen. These buttons
+ * are responsible for arm/disarm and takeoff/land
+ *
  */
 public class FooterView extends LinearLayout implements DroneEvent.DroneEventListener,
         LoadingButton.LoadingButtonListener {
@@ -47,6 +49,7 @@ public class FooterView extends LinearLayout implements DroneEvent.DroneEventLis
 
         armDisarmBtn_.setText(DroneImp.INSTANCE.isArmed() ? "Disarm" : "Arm");
         takeoffLandBtn_.setText(DroneImp.INSTANCE.isInAir() ? "Land" : "Takeoff");
+        takeoffLandBtn_.setEnabled(DroneImp.INSTANCE.isArmed());
     }
 
     @Override
@@ -56,6 +59,8 @@ public class FooterView extends LinearLayout implements DroneEvent.DroneEventLis
                 event == DroneEvent.ARM_TIMEOUT) {
             armDisarmBtn_.setText(DroneImp.INSTANCE.isArmed() ? "Disarm" : "Arm");
             armDisarmBtn_.stopWaiting();
+
+            takeoffLandBtn_.setEnabled(DroneImp.INSTANCE.isArmed());
         }
     }
 

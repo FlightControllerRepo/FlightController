@@ -23,6 +23,7 @@ import com.flightcontroller.model.DroneImp;
 import com.flightcontroller.speech.SpeechHandler;
 import com.flightcontroller.ui.MiniMapFragment;
 import com.flightcontroller.ui.components.FooterView;
+import com.flightcontroller.ui.components.SoundAnimationView;
 import com.flightcontroller.utils.LogManager;
 import com.pnikosis.materialishprogress.ProgressWheel;
 
@@ -36,12 +37,13 @@ public class MainActivity extends ActionBarActivity implements DroneEvent.DroneE
 
     private FooterView footerView_;
 
-    private ActionBarDrawerToggle mDrawerToggle;
-    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle drawerToggle_;
+    private DrawerLayout drawerLayout_;
 
     private ProgressWheel connecting_;
     private TextView connectionText_;
 
+    private SoundAnimationView soundAnimationView_;
     private TextView connectDisconnectButton_;
     private ImageView speechButton_;
 
@@ -87,16 +89,22 @@ public class MainActivity extends ActionBarActivity implements DroneEvent.DroneE
         LayoutInflater inflater = LayoutInflater.from(this);
 
         View customView = inflater.inflate(R.layout.main_actionbar, null);
+        soundAnimationView_ = (SoundAnimationView) customView.findViewById(R.id.sound_animation_ab);
+        soundAnimationView_.setSpeechHandler(speechHandler_);
+
         speechButton_ = (ImageView) customView.findViewById(R.id.speech_ab);
         speechButton_.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() ==  MotionEvent.ACTION_UP) {
                     isSpeaking_ = !isSpeaking_;
-                    if (isSpeaking_)
+                    if (isSpeaking_) {
                         speechHandler_.startListening();
-                    else
+                        soundAnimationView_.activate();
+                    } else {
                         speechHandler_.stopListening();
+                        soundAnimationView_.deactivate();
+                    }
                 }
                 return false;
             }
@@ -134,8 +142,8 @@ public class MainActivity extends ActionBarActivity implements DroneEvent.DroneE
     private void setupDrawer() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+        drawerLayout_ = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerToggle_ = new ActionBarDrawerToggle(this, drawerLayout_,
                 R.string.drawer_open, R.string.drawer_close){
 
             @Override
@@ -144,13 +152,13 @@ public class MainActivity extends ActionBarActivity implements DroneEvent.DroneE
             }
         };
 
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        drawerLayout_.setDrawerListener(drawerToggle_);
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
+        drawerToggle_.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -163,7 +171,7 @@ public class MainActivity extends ActionBarActivity implements DroneEvent.DroneE
     public boolean onOptionsItemSelected(MenuItem item) {
         // Pass the event to ActionBarDrawerToggle, if it returns
         // true, then it has handled the app icon touch event
-        if (mDrawerToggle.onOptionsItemSelected(item)){
+        if (drawerToggle_.onOptionsItemSelected(item)){
             return true;
         }
 
@@ -174,9 +182,9 @@ public class MainActivity extends ActionBarActivity implements DroneEvent.DroneE
     public void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
-        if (mDrawerToggle != null) {
+        if (drawerToggle_ != null) {
             // Sync the toggle state after onRestoreInstanceState has occurred.
-            mDrawerToggle.syncState();
+            drawerToggle_.syncState();
         }
     }
 

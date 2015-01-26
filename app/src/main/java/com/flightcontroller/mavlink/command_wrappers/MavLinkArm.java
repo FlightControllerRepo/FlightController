@@ -9,10 +9,7 @@ import com.flightcontroller.model.Drone;
 
 public class MavLinkArm {
 
-	//Taken from MAV_COMPONENT.java
 	public static final int MAV_COMP_ID_SYSTEM_CONTROL = 250;
-	
-	//Taken from MAV_CMD.java
 	public static final int MAV_CMD_COMPONENT_ARM_DISARM = 400;
 	
 	public static MAVLinkPacket getArmMessagePacket(boolean arm, Drone drone) { //Same but removed the drone parameter
