@@ -22,12 +22,15 @@
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:gravity="center"
-        android:layout_toRightOf="@id/close_button_idv"
-        android:text="hello"/>
+
+        android:text="Altitude"/>
     <TextView
+        android:id="@+id/body_idv"
         android:layout_below="@id/title_header_idv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_margin="5dp"
         android:text="pew" />
 
 

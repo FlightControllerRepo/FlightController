@@ -27,9 +27,6 @@ import com.flightcontroller.ui.components.SoundAnimationView;
 import com.flightcontroller.utils.LogManager;
 import com.pnikosis.materialishprogress.ProgressWheel;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 
 public class MainActivity extends ActionBarActivity implements DroneEvent.DroneEventListener {
 
@@ -115,7 +112,7 @@ public class MainActivity extends ActionBarActivity implements DroneEvent.DroneE
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    DroneImp.INSTANCE.postEvent(DroneEvent.RADIO_CONNECTED);
+                    /*DroneImp.INSTANCE.postEvent(DroneEvent.RADIO_CONNECTED);
                     Timer t = new Timer();
                     t.schedule(new TimerTask() {
                         @Override
@@ -123,13 +120,11 @@ public class MainActivity extends ActionBarActivity implements DroneEvent.DroneE
                             DroneImp.INSTANCE.postEvent(DroneEvent.HEARTBEAT_FIRST);
                         }
                     }, 5000);
-
-                    /*
+                    */
                     if (DroneImp.INSTANCE.isConnected())
                         DroneImp.INSTANCE.disconnectRadio();
                     else
                         DroneImp.INSTANCE.connectRadio();
-                    */
                 }
                 return false;
             }

@@ -4,7 +4,9 @@
     android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_alignParentRight="true" >
+    android:layout_alignParentRight="true"
+    android:animateLayoutChanges="true"
+    android:paddingTop="4dp">
 
    <com.flightcontroller.ui.info_pane.InfoDataView
        android:id="@+id/data_view1"
