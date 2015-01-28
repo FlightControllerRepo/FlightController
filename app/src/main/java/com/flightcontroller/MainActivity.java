@@ -94,6 +94,7 @@ public class MainActivity extends ActionBarActivity implements DroneEvent.DroneE
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() ==  MotionEvent.ACTION_UP) {
+                    System.out.println("SPEAKING:" + isSpeaking_);
                     isSpeaking_ = !isSpeaking_;
                     if (isSpeaking_) {
                         speechHandler_.startListening();

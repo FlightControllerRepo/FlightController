@@ -1,5 +1,7 @@
 package com.flightcontroller.utils;
 
+import android.util.Log;
+
 import com.flightcontroller.ui.LoggerActivity;
 
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ public enum LogManager {
     	LogEntry newEntry = new LogEntry(severity, message);
     	entries_.add(newEntry);
     	LoggerActivity.appendText(newEntry + "<br>");
+        Log.v("LOGGER", message);
     }
     
     public String getLogText() {

@@ -88,6 +88,7 @@ public class SoundAnimationView extends View {
 
     public void activate() {
         activated_ = true;
+
         updateTimer_ = new Timer();
         updateTimer_.scheduleAtFixedRate(updateTimerTask_, new Date(), DRAW_UPDATE);
     }

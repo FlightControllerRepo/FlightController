@@ -64,7 +64,9 @@ public class SpeechHandler implements RecognitionListener {
                     Assets assets = new Assets(MainActivity.getMainContext());
                     File assetDir = assets.syncAssets();
                     setupRecognizer(assetDir);
+                    LogManager.INSTANCE.addEntry("Setup recognizer!", LogSeverity.INFO);
                 } catch (IOException e) {
+                    e.printStackTrace();
                     return e;
                 }
                 return null;
@@ -81,13 +83,17 @@ public class SpeechHandler implements RecognitionListener {
     }
 
     public void startListening() {
+        LogManager.INSTANCE.addEntry("Starting voice listening", LogSeverity.INFO);
     	if (recognizer_ != null)
     		recognizer_.startListening(COMMANDS_SEARCH);
     }
     
     public void stopListening() {
+        LogManager.INSTANCE.addEntry("Ending voice listening", LogSeverity.INFO);
         if (recognizer_ != null)
     	    recognizer_.stop();
+
+        LogManager.INSTANCE.addEntry("Ended voice listening", LogSeverity.INFO);
     }
 
     public int getAudioVolume() {
