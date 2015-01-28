@@ -24,7 +24,6 @@ public class SoundAnimationView extends View {
 
     private float time_;
     private Timer updateTimer_;
-    private TimerTask updateTimerTask_;
 
     private float[] lines_;
 
@@ -48,15 +47,29 @@ public class SoundAnimationView extends View {
         paintObject_.setStrokeWidth(3.0f);
 
         lines_ = new float[4 * NUMBER_OF_POINTS];
+    }
 
-        updateTimerTask_ = new TimerTask() {
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+
+        if (activated_)
+            canvas.drawLines(lines_, paintObject_);
+    }
+
+    public void activate() {
+        activated_ = true;
+
+        updateTimer_ = new Timer();
+        updateTimer_.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
+                System.out.println(speechHandler_.getAudioVolume());
                 maxVolume_ = Math.max(maxVolume_, speechHandler_.getAudioVolume());
                 float xscale = getWidth() / (float) NUMBER_OF_POINTS;
                 float yscale = speechHandler_.getAudioVolume() /
                         maxVolume_ * (getHeight() / 2.0f) * 0.85f;
-                for (int i = 0;i < NUMBER_OF_POINTS;i ++) {
+                for (int i = 0; i < NUMBER_OF_POINTS; i++) {
                     lines_[i * 4] = i * xscale;
                     lines_[i * 4 + 1] = yscale * (float) Math.sin(i * xscale + time_) +
                             getHeight() / 2.0f;
@@ -75,22 +88,7 @@ public class SoundAnimationView extends View {
                     }
                 });
             }
-        };
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-
-        if (activated_)
-            canvas.drawLines(lines_, paintObject_);
-    }
-
-    public void activate() {
-        activated_ = true;
-
-        updateTimer_ = new Timer();
-        updateTimer_.scheduleAtFixedRate(updateTimerTask_, new Date(), DRAW_UPDATE);
+        }, new Date(), DRAW_UPDATE);
     }
 
     public void deactivate() {
