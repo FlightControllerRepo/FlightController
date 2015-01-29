@@ -117,7 +117,7 @@ public class MiniMapFragment extends MapFragment implements GoogleMap.OnMapClick
                     @Override
                     public void onInfoWindowClick(Marker marker) {
                         if (marker.equals(gohere)) {
-                            DroneActions.moveToPosition(DroneImp.INSTANCE, marker.getPosition());
+                            DroneActions.goToPosition(DroneImp.INSTANCE, marker.getPosition());
                             marker.hideInfoWindow();
                         }
                     }

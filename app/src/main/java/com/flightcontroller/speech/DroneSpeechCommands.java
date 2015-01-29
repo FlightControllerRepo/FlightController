@@ -7,7 +7,11 @@ import android.content.DialogInterface;
 import com.flightcontroller.MainActivity;
 import com.flightcontroller.model.DroneActions;
 import com.flightcontroller.model.DroneImp;
+import com.flightcontroller.model.attributes.core.Orientation;
+import com.flightcontroller.utils.LogManager;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -15,16 +19,28 @@ import java.util.Map;
 */
 public class DroneSpeechCommands {
 
-    private Map<String, Integer> digits; // map from the word representation of digits to the digits themselves.
-
-    public DroneSpeechCommands(Map<String, Integer> digits) {
-        this.digits = digits;
-    }
+    @SuppressWarnings("serial")
+    public static final Map<String, Integer> DIGITS = new HashMap<String, Integer>() {
+        {
+            put("oh", 0);
+            put("zero", 0);
+            put("one", 1);
+            put("two", 2);
+            put("three", 3);
+            put("four", 4);
+            put("five", 5);
+            put("six", 6);
+            put("seven", 7);
+            put("eight", 8);
+            put("nine", 9);
+        }
+    };
 
     /**
-    * parse the speech. once the desired command is known, display an alert on the screen asking the user to confirm the command.
+    * parse the speech. once the desired command is known, display an alert on
+     * the screen asking the user to confirm the command.
     */
-    protected void parseSpeech(final String speech) {
+    public void parseSpeech(final String speech) {
     	DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
     	    @Override
     	    public void onClick(DialogInterface dialog, int which) {
@@ -87,7 +103,7 @@ public class DroneSpeechCommands {
     private int parseNumbers(String speech) {
         int retVal = 0;
         for (String token : speech.split("\\s+")) {
-            for (Map.Entry<String, Integer> digitPair : digits.entrySet()) {
+            for (Map.Entry<String, Integer> digitPair : DIGITS.entrySet()) {
                 if (!token.equals(digitPair.getKey())) {
                     continue;
                 }
@@ -121,23 +137,37 @@ public class DroneSpeechCommands {
         return "goHome()";
     }
 
-    private String go(String direction, int distance) {
-        return "go(" + direction + "," + distance + ")";
+    private void go(String direction, int distance) {
+        if (direction.equals("up") || direction.equals("down")) {
+            int delta = direction.equals("up") ? distance : -distance;
+            Orientation orien = (Orientation) DroneImp.INSTANCE.getDroneAttribute("Orientation");
+
+            DroneActions.goToAltitude(DroneImp.INSTANCE, orien.getTargetAltitude() + delta);
+        } else if (direction.equals("forward") || direction.equals("backward")) {
+            int delta = direction.equals("forward") ? distance : -distance;
+            DroneActions.goForward(DroneImp.INSTANCE, delta);
+        }
+        //TODO add left, right, etc
     }
 
     private String goToWaypoint(int waypoint) {
         return "goToWayPoint(" + waypoint + ")";
     }
 
-    private String turn(int degrees) {
-        return "turn(" + degrees + ")";
+    private void turn(int degrees) {
+        DroneActions.turn(DroneImp.INSTANCE, degrees);
     }
 
     private String rotate(int degreesPerSecond) {
         return "rotate(" + degreesPerSecond + ")";
     }
 
-    private String status() {
-        return "status()";
+    private void status() {
+        ArrayList<String> statusText = DroneActions.getStatusText(DroneImp.INSTANCE);
+        final StringBuffer dispText = new StringBuffer();
+        for (String status : statusText)
+            dispText.append(status + "\n");
+
+        LogManager.INSTANCE.addEntry("STATUS:" + dispText, LogManager.LogSeverity.INFO);
     }
 }

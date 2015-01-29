@@ -64,11 +64,11 @@ public class SoundAnimationView extends View {
         updateTimer_.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                System.out.println(speechHandler_.getAudioVolume());
-                maxVolume_ = Math.max(maxVolume_, speechHandler_.getAudioVolume());
+                int speechVolume = Math.abs(speechHandler_.getAudioVolume());
+                System.out.println(speechVolume);
+                maxVolume_ = Math.max(maxVolume_, speechVolume);
                 float xscale = getWidth() / (float) NUMBER_OF_POINTS;
-                float yscale = speechHandler_.getAudioVolume() /
-                        maxVolume_ * (getHeight() / 2.0f) * 0.85f;
+                float yscale = speechVolume / maxVolume_ * (getHeight() / 2.0f) * 0.85f;
                 for (int i = 0; i < NUMBER_OF_POINTS; i++) {
                     lines_[i * 4] = i * xscale;
                     lines_[i * 4 + 1] = yscale * (float) Math.sin(i * xscale + time_) +

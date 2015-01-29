@@ -2,15 +2,14 @@ package com.flightcontroller.speech;
 
 import android.os.AsyncTask;
 
-import com.flightcontroller.utils.LogManager;
-import com.flightcontroller.utils.LogManager.LogSeverity;
 import com.flightcontroller.MainActivity;
 import com.flightcontroller.R;
+import com.flightcontroller.utils.LogManager;
+import com.flightcontroller.utils.LogManager.LogSeverity;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map;
 
 import edu.cmu.pocketsphinx.Assets;
 import edu.cmu.pocketsphinx.Hypothesis;
@@ -28,22 +27,7 @@ public class SpeechHandler implements RecognitionListener {
 	private static final String KEYPHRASE = "start";
 	private static final String COMMANDS_SEARCH = "commands";
 	
-	@SuppressWarnings("serial")
-	private static final Map<String, Integer> DIGITS = new HashMap<String, Integer>() {
-    	{
-    		 put("oh", 0);
-    	     put("zero", 0);
-    	     put("one", 1);
-    	     put("two", 2);
-    	     put("three", 3);
-    	     put("four", 4);
-    	     put("five", 5);
-    	     put("six", 6);
-    	     put("seven", 7);
-    	     put("eight", 8);
-    	     put("nine", 9);
-    	}
-    };
+
  
 	private SpeechRecognizer recognizer_;
 	private DroneSpeechCommands commandParser_;
@@ -52,7 +36,7 @@ public class SpeechHandler implements RecognitionListener {
  
     
     public SpeechHandler() {
-    	commandParser_ = new DroneSpeechCommands(DIGITS);
+    	commandParser_ = new DroneSpeechCommands();
         captions_ = new HashMap<>();
         captions_.put(COMMANDS_SEARCH, R.string.commands_caption);
         

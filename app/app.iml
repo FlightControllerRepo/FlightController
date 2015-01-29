@@ -91,10 +91,9 @@
     <orderEntry type="library" exported="" name="support-v4-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="MavlinkLib" level="project" />
     <orderEntry type="library" exported="" name="usb-serial-for-android-0.2.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" exported="" name="materialish-progress-1.2" level="project" />
     <orderEntry type="library" exported="" name="recyclerview-v7-21.0.2" level="project" />
+    <orderEntry type="library" exported="" name="materialish-progress-1.2" level="project" />
     <orderEntry type="library" exported="" name="snackbar-2.7.4" level="project" />
-    <orderEntry type="library" exported="" name="cardview-v7-21.0.2" level="project" />
   </component>
 </module>
 
