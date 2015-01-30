@@ -27,4 +27,12 @@ public class GeoTools {
         return (new LatLng(Math.toDegrees(lat2), Math.toDegrees(lon2)));
     }
 
+    public static float warpToPositiveAngle(float degree) {
+        if (degree >= 0) {
+            return degree;
+        } else {
+            return 360 + degree;
+        }
+    }
+
 }

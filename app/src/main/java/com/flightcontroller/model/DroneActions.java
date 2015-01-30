@@ -126,15 +126,7 @@ public class DroneActions {
             }
         });
         LogManager.INSTANCE.addEntry("Moving to altitude " + altmeters, LogSeverity.INFO);
-
-
-        GPSPosition gps = (GPSPosition) drone.getDroneAttribute("GPSPosition");
-
-        drone.sendPacket(MavLinkGuidedMode.getChangeFlightModePacket(ApmModes.ROTOR_GUIDED, drone));
-        drone.sendPacket(MavLinkGuidedMode.getWaypointPacket(drone, gps.getLatitude(),
-                gps.getLongitude(), altmeters));
-
-
+        drone.sendPacket(MavLinkGuidedMode.getWaypointPacket(drone, 0, 0, altmeters));
     }
 
     /**
@@ -177,19 +169,26 @@ public class DroneActions {
      *
      * @param drone
      * @param meters amount to move forward
+     * @param bearing the angle at which to go (0 is forward/north for relative true/false)
+     * @param relative true if this bearing should be relative to the copters current bearing
      */
-    public static void goForward(Drone drone, float meters) {
+    public static void goForwardByBearing(Drone drone, float meters,
+                                          float bearing, boolean relative) {
         GPSPosition gps = (GPSPosition) drone.getDroneAttribute("GPSPosition");
         Orientation orien = (Orientation) drone.getDroneAttribute("Orientation");
 
         LatLng currentPos = new LatLng(gps.getLatitude(), gps.getLongitude());
-        LatLng pos = GeoTools.newCoordFromBearingAndDistance(currentPos, orien.getTargetYaw(), meters);
+        float gobearing = (relative) ? orien.getTargetYaw() + bearing : bearing;
+
+        LatLng pos = GeoTools.newCoordFromBearingAndDistance(currentPos, gobearing, meters);
         goToPosition(drone, pos);
     }
 
-	public static void turn(Drone drone, int degrees) {
+	public static void turn(Drone drone, int degrees, boolean relative) {
 		Orientation orien  = (Orientation) drone.getDroneAttribute("Orientation");
-        orien.setTargetYaw(degrees);
+        orien.setTargetYaw(relative ? orien.getTargetYaw() + degrees : degrees);
+
+        drone.sendPacket(MavLinkGuidedMode.getChangeYawPacket(drone, orien.getTargetYaw()));
 	}
 
 	public static ArrayList<String> getStatusText(Drone drone) {

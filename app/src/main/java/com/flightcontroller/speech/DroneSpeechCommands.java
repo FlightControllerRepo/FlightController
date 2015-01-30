@@ -20,7 +20,7 @@ import java.util.Map;
 public class DroneSpeechCommands {
 
     @SuppressWarnings("serial")
-    public static final Map<String, Integer> DIGITS = new HashMap<String, Integer>() {
+    private static final Map<String, Integer> DIGITS = new HashMap<String, Integer>() {
         {
             put("oh", 0);
             put("zero", 0);
@@ -35,6 +35,26 @@ public class DroneSpeechCommands {
             put("nine", 9);
         }
     };
+
+    private static final Map<String, Integer> RELATIVE_DIRECTION_ANGLES =
+            new HashMap<String, Integer>() {
+                {
+                    put("forward", 0);
+                    put("right", 90);
+                    put("backward", 180);
+                    put("left", 270);
+                }
+            };
+
+    private static final Map<String, Integer> ABSOLUTE_DIRECTION_ANGLES =
+            new HashMap<String, Integer>() {
+                {
+                    put("north", 0);
+                    put("east", 90);
+                    put("south", 180);
+                    put("west", 270);
+                }
+            };
 
     /**
     * parse the speech. once the desired command is known, display an alert on
@@ -143,11 +163,13 @@ public class DroneSpeechCommands {
             Orientation orien = (Orientation) DroneImp.INSTANCE.getDroneAttribute("Orientation");
 
             DroneActions.goToAltitude(DroneImp.INSTANCE, orien.getTargetAltitude() + delta);
-        } else if (direction.equals("forward") || direction.equals("backward")) {
-            int delta = direction.equals("forward") ? distance : -distance;
-            DroneActions.goForward(DroneImp.INSTANCE, delta);
+        } else if (RELATIVE_DIRECTION_ANGLES.containsKey(direction)) { //forward, left, backwards, right
+            int bearing = RELATIVE_DIRECTION_ANGLES.get(direction);
+            DroneActions.goForwardByBearing(DroneImp.INSTANCE, bearing, distance, true);
+        } else if (ABSOLUTE_DIRECTION_ANGLES.containsKey(direction)) { //north, east, south, west
+            int bearing = ABSOLUTE_DIRECTION_ANGLES.get(direction);
+            DroneActions.goForwardByBearing(DroneImp.INSTANCE, bearing, distance, false);
         }
-        //TODO add left, right, etc
     }
 
     private String goToWaypoint(int waypoint) {
@@ -155,7 +177,7 @@ public class DroneSpeechCommands {
     }
 
     private void turn(int degrees) {
-        DroneActions.turn(DroneImp.INSTANCE, degrees);
+        DroneActions.turn(DroneImp.INSTANCE, degrees, true);
     }
 
     private String rotate(int degreesPerSecond) {
