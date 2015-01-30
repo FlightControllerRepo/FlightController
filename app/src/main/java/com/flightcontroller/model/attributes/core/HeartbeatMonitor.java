@@ -38,6 +38,7 @@ public class HeartbeatMonitor extends DroneAttribute {
 	@Override
 	public void handleMessage(MAVLinkMessage msg) {
 		heartbeatTimeout_.cancel();
+        heartbeatTimeout_ = new Timer();
 		
 		if (firstHeartbeat_) {
 			LogManager.INSTANCE.addEntry("Receieved first heartbeat!", LogSeverity.INFO);

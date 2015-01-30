@@ -1,8 +1,6 @@
 package com.flightcontroller;
 
 import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -62,7 +60,9 @@ public class MainActivity extends ActionBarActivity implements DroneEvent.DroneE
 
         DroneImp.INSTANCE.addDroneEventListener(this);
 
+        /*
         mapFragment_ = MiniMapFragment.newInstance();
+        */
         connecting_ = (ProgressWheel) findViewById(R.id.awaiting_connection);
         connectionText_ = (TextView) findViewById(R.id.connection_txb);
 
@@ -112,7 +112,8 @@ public class MainActivity extends ActionBarActivity implements DroneEvent.DroneE
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    /*DroneImp.INSTANCE.postEvent(DroneEvent.RADIO_CONNECTED);
+                    /*
+                    DroneImp.INSTANCE.postEvent(DroneEvent.RADIO_CONNECTED);
                     Timer t = new Timer();
                     t.schedule(new TimerTask() {
                         @Override
@@ -125,6 +126,7 @@ public class MainActivity extends ActionBarActivity implements DroneEvent.DroneE
                         DroneImp.INSTANCE.disconnectRadio();
                     else
                         DroneImp.INSTANCE.connectRadio();
+
                 }
                 return false;
             }
@@ -208,6 +210,7 @@ public class MainActivity extends ActionBarActivity implements DroneEvent.DroneE
                 public void run() {
                     fadeConnectionStatus(true);
 
+                    /*
                     FragmentManager fragmentManager = getFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.setCustomAnimations(android.R.animator.fade_in,
@@ -215,6 +218,7 @@ public class MainActivity extends ActionBarActivity implements DroneEvent.DroneE
 
                     fragmentTransaction.add(R.id.map_container, mapFragment_, "map");
                     fragmentTransaction.commit();
+                    */
 
                     footerView_.setVisibility(View.VISIBLE);
                 }
