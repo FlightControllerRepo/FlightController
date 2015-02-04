@@ -84,10 +84,12 @@ public class DroneSpeechCommands {
 				        if (speech.startsWith("go")) {
 				            if (speech.contains("home")) {
 				                goHome();
+                                return;
 				            }
 				            if (speech.contains("to way point")) {
 				                int waypoint = parseNumbers(speech.substring(speech.indexOf("to way point") + "to way point ".length()));
 				                goToWaypoint(waypoint);
+                                return;
 				            }
 				            // else, the command is "go <direction> <distance>"
 				            String direction = speech.substring("go ".length());
