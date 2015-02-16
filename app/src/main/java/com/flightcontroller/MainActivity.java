@@ -78,9 +78,9 @@ public class MainActivity extends ActionBarActivity implements DroneEvent.DroneE
     }
 
     @Override
-    protected void onStop() {
+    protected void onDestroy() {
         speechHandler_.shutdown();
-        super.onStop();
+        super.onDestroy();
     }
 
     public static Activity getMainContext() {
