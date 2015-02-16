@@ -72,6 +72,10 @@ public class DroneSpeechCommands {
         });
     }
 
+    protected void shutdown() {
+        textToSpeech.shutdown();
+    }
+
     /**
     * parse the speech. once the desired command is known, display an alert on
      * the screen asking the user to confirm the command.

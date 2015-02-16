@@ -76,6 +76,13 @@ public class MainActivity extends ActionBarActivity implements DroneEvent.DroneE
         setupDrawer();
 
     }
+
+    @Override
+    protected void onStop() {
+        speechHandler_.shutdown();
+        super.onStop();
+    }
+
     public static Activity getMainContext() {
         return mainContext_;
     }

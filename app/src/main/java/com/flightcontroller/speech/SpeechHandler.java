@@ -141,5 +141,8 @@ public class SpeechHandler implements RecognitionListener {
 
 	@Override
 	public void onTimeout() { }
-	
+
+    public void shutdown() {
+        commandParser_.shutdown();
+    }
 }
