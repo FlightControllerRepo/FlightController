@@ -54,7 +54,7 @@ public class MainActivity extends ActionBarActivity implements DroneEvent.DroneE
         super.onCreate(savedInstanceState);
         mainContext_ = this;
 
-        speechHandler_ = new SpeechHandler();
+        speechHandler_ = new SpeechHandler(this);
         isSpeaking_ = false;
 
         LogManager.INSTANCE.addEntry("OnCreate MainActivity", LogManager.LogSeverity.INFO);
@@ -78,6 +78,13 @@ public class MainActivity extends ActionBarActivity implements DroneEvent.DroneE
         setupDrawer();
 
     }
+
+    @Override
+    protected void onDestroy() {
+        speechHandler_.shutdown();
+        super.onDestroy();
+    }
+
     public static Activity getMainContext() {
         return mainContext_;
     }

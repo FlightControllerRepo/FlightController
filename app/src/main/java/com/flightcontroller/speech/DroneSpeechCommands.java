@@ -2,7 +2,9 @@ package com.flightcontroller.speech;
 
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.speech.tts.TextToSpeech;
 
 import com.flightcontroller.MainActivity;
 import com.flightcontroller.model.DroneActions;
@@ -12,12 +14,15 @@ import com.flightcontroller.utils.LogManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
 * Class to parse the recognized speech into commands for the quadcopter.
 */
 public class DroneSpeechCommands {
+
+    private TextToSpeech textToSpeech;
 
     @SuppressWarnings("serial")
     private static final Map<String, Integer> DIGITS = new HashMap<String, Integer>() {
@@ -55,6 +60,21 @@ public class DroneSpeechCommands {
                     put("west", 270);
                 }
             };
+
+    public DroneSpeechCommands(Context context) {
+        textToSpeech = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status !=  TextToSpeech.ERROR) {
+                    textToSpeech.setLanguage(Locale.ENGLISH);
+                }
+            }
+        });
+    }
+
+    protected void shutdown() {
+        textToSpeech.shutdown();
+    }
 
     /**
     * parse the speech. once the desired command is known, display an alert on
@@ -189,9 +209,11 @@ public class DroneSpeechCommands {
     private void status() {
         ArrayList<String> statusText = DroneActions.getStatusText(DroneImp.INSTANCE);
         final StringBuffer dispText = new StringBuffer();
-        for (String status : statusText)
+        for (String status : statusText) {
             dispText.append(status + "\n");
+        }
 
         LogManager.INSTANCE.addEntry("STATUS:" + dispText, LogManager.LogSeverity.INFO);
+        textToSpeech.speak(dispText.toString(), TextToSpeech.QUEUE_FLUSH, null, TextToSpeech.ACTION_TTS_QUEUE_PROCESSING_COMPLETED);
     }
 }

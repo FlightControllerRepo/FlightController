@@ -1,5 +1,6 @@
 package com.flightcontroller.speech;
 
+import android.content.Context;
 import android.os.AsyncTask;
 
 import com.flightcontroller.MainActivity;
@@ -35,8 +36,8 @@ public class SpeechHandler implements RecognitionListener {
     private HashMap<String, Integer> captions_;
  
     
-    public SpeechHandler() {
-    	commandParser_ = new DroneSpeechCommands();
+    public SpeechHandler(Context context) {
+    	commandParser_ = new DroneSpeechCommands(context);
         captions_ = new HashMap<>();
         captions_.put(COMMANDS_SEARCH, R.string.commands_caption);
         
@@ -140,5 +141,8 @@ public class SpeechHandler implements RecognitionListener {
 
 	@Override
 	public void onTimeout() { }
-	
+
+    public void shutdown() {
+        commandParser_.shutdown();
+    }
 }
