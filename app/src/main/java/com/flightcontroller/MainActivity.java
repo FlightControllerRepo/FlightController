@@ -1,6 +1,8 @@
 package com.flightcontroller;
 
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -210,7 +212,7 @@ public class MainActivity extends ActionBarActivity implements DroneEvent.DroneE
                 public void run() {
                     fadeConnectionStatus(true);
 
-                    /*
+
                     FragmentManager fragmentManager = getFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.setCustomAnimations(android.R.animator.fade_in,
@@ -218,7 +220,7 @@ public class MainActivity extends ActionBarActivity implements DroneEvent.DroneE
 
                     fragmentTransaction.add(R.id.map_container, mapFragment_, "map");
                     fragmentTransaction.commit();
-                    */
+
 
                     footerView_.setVisibility(View.VISIBLE);
                 }
