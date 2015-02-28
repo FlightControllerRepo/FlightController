@@ -42,7 +42,9 @@ public class HeartbeatMonitor extends DroneAttribute {
         //invalid and will crash
 
 		if (firstHeartbeat_) {
-			LogManager.INSTANCE.addEntry("Receieved first heartbeat!", LogSeverity.INFO);
+			LogManager.INSTANCE.addEntry("Received first heartbeat!", LogSeverity.INFO);
+            previousHeartbeat_ = (msg_heartbeat) msg;
+            firstHeartbeat_ = false;
 			drone_.postEvent(DroneEvent.HEARTBEAT_FIRST);
 		} else {
 			msg_heartbeat currentHeartbeat_ = (msg_heartbeat) msg;
@@ -50,7 +52,9 @@ public class HeartbeatMonitor extends DroneAttribute {
 									(byte) MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED;
 			boolean prevArmed = (previousHeartbeat_.base_mode & (byte) MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED) ==
 					(byte) MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED;
-			
+
+            previousHeartbeat_ = (msg_heartbeat) msg;
+            firstHeartbeat_ = false;
 			if (prevArmed != currentArmed)
 				drone_.postEvent(currentArmed ? DroneEvent.ARMED : DroneEvent.DISARMED);
 		}
@@ -60,9 +64,6 @@ public class HeartbeatMonitor extends DroneAttribute {
 				heartbeatTimeout();
 			}
 		}, HEARTBEAT_TIMEOUT);
-		
-		previousHeartbeat_ = (msg_heartbeat) msg;
-		firstHeartbeat_ = false;
 	}
 
 	public boolean isArmed() {

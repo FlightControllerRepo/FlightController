@@ -6,6 +6,7 @@ import com.flightcontroller.MainActivity;
 import com.flightcontroller.mavlink.command_wrappers.MavLinkArm;
 import com.flightcontroller.mavlink.command_wrappers.MavLinkGuidedMode;
 import com.flightcontroller.mavlink.command_wrappers.MavLinkTakeoff;
+import com.flightcontroller.model.attributes.core.Battery;
 import com.flightcontroller.model.attributes.core.GPSPosition;
 import com.flightcontroller.model.attributes.core.HeartbeatMonitor;
 import com.flightcontroller.model.attributes.core.Orientation;
@@ -193,14 +194,17 @@ public class DroneActions {
 
 	public static ArrayList<String> getStatusText(Drone drone) {
 		ArrayList<String> array = new ArrayList<String>();
-		
+
+        DecimalFormat df = new DecimalFormat("####.#");
 		HeartbeatMonitor mon = (HeartbeatMonitor) drone.getDroneAttribute("HeartbeatMonitor");
-		array.add("Is armed:" + (mon.isArmed() ? "Yes" : "No"));
 		Orientation or = (Orientation) drone.getDroneAttribute("Orientation");
-		array.add("Altitude:" + or.getAltitude());
-		array.add("Yaw:" + or.getYaw());
-		array.add("Pitch:" + or.getPitch());
-		array.add("Roll:" + or.getRoll());
+        Battery bat = (Battery) drone.getDroneAttribute("Battery");
+        array.add("Is armed:" + (mon.isArmed() ? "Yes" : "No"));
+		array.add("Altitude:" + df.format(or.getAltitude()));
+        array.add("Battery:" + df.format(bat.getVoltage()));
+		array.add("Yaw:" + df.format(or.getYaw()));
+		array.add("Pitch:" + df.format(or.getPitch()));
+		array.add("Roll:" + df.format(or.getRoll()));
 		
 		return array;
 	}

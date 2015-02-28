@@ -62,9 +62,9 @@ public class MainActivity extends ActionBarActivity implements DroneEvent.DroneE
 
         DroneImp.INSTANCE.addDroneEventListener(this);
 
-        /*
+
         mapFragment_ = MiniMapFragment.newInstance();
-        */
+
         connecting_ = (ProgressWheel) findViewById(R.id.awaiting_connection);
         connectionText_ = (TextView) findViewById(R.id.connection_txb);
 
