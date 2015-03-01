@@ -52,6 +52,10 @@ public class InfoDataView extends RelativeLayout {
         bodyText_ = (TextView) findViewById(R.id.body_idv);
     }
 
+    public void setText(String title, String text) {
+        bodyText_.setText(text);
+        title_.setText(title);
+    }
 
 
 }

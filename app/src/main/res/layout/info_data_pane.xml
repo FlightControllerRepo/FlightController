@@ -19,6 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/data_view1"/>
 
+    <!--
     <com.flightcontroller.ui.info_pane.InfoDataView
         android:id="@+id/data_view3"
         android:layout_width="200dp"
@@ -30,6 +31,6 @@
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/data_view3" />
-
+    -->
 
 </RelativeLayout>
