@@ -24,6 +24,7 @@ import com.flightcontroller.speech.SpeechHandler;
 import com.flightcontroller.ui.MiniMapFragment;
 import com.flightcontroller.ui.components.FooterView;
 import com.flightcontroller.ui.components.SoundAnimationView;
+import com.flightcontroller.ui.info_pane.InfoPaneView;
 import com.flightcontroller.utils.LogManager;
 import com.pnikosis.materialishprogress.ProgressWheel;
 
@@ -34,12 +35,15 @@ public class MainActivity extends ActionBarActivity implements DroneEvent.DroneE
 
     private FooterView footerView_;
 
+    //drawer
     private ActionBarDrawerToggle drawerToggle_;
     private DrawerLayout drawerLayout_;
 
+    //connecting test
     private ProgressWheel connecting_;
     private TextView connectionText_;
 
+    //header
     private SoundAnimationView soundAnimationView_;
     private TextView connectDisconnectButton_;
     private ImageView speechButton_;
@@ -48,6 +52,7 @@ public class MainActivity extends ActionBarActivity implements DroneEvent.DroneE
     private boolean isSpeaking_;
 
     private MiniMapFragment mapFragment_;
+    private InfoPaneView infoPane_;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +69,8 @@ public class MainActivity extends ActionBarActivity implements DroneEvent.DroneE
 
 
         mapFragment_ = MiniMapFragment.newInstance();
+        infoPane_ = (InfoPaneView) findViewById(R.id.info_pane);
+        infoPane_.setVisibility(View.INVISIBLE);
 
         connecting_ = (ProgressWheel) findViewById(R.id.awaiting_connection);
         connectionText_ = (TextView) findViewById(R.id.connection_txb);
@@ -129,8 +136,8 @@ public class MainActivity extends ActionBarActivity implements DroneEvent.DroneE
                         public void run() {
                             DroneImp.INSTANCE.postEvent(DroneEvent.HEARTBEAT_FIRST);
                         }
-                    }, 5000);
-                    */
+                    }, 5000);*/
+
                     if (DroneImp.INSTANCE.isConnected())
                         DroneImp.INSTANCE.disconnectRadio();
                     else
@@ -143,6 +150,65 @@ public class MainActivity extends ActionBarActivity implements DroneEvent.DroneE
 
         getSupportActionBar().setCustomView(customView);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
+    }
+
+    @Override
+    public void onDroneEvent(DroneEvent event, Drone drone) {
+        if (event == DroneEvent.RADIO_CONNECTED) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    fadeConnectionStatus(false);
+                    connectDisconnectButton_.setText("Disconnect");
+                }
+            });
+
+        } else if (event == DroneEvent.RADIO_DISCONNECTED) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    fadeConnectionStatus(true);
+                    connectDisconnectButton_.setText("Connect");
+                }
+            });
+        } else if (event == DroneEvent.HEARTBEAT_FIRST) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    fadeConnectionStatus(true);
+
+                    FragmentManager fragmentManager = getFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.setCustomAnimations(android.R.animator.fade_in,
+                            android.R.animator.fade_out);
+
+                    fragmentTransaction.add(R.id.map_container, mapFragment_, "map");
+                    fragmentTransaction.commit();
+
+                    infoPane_.setVisibility(View.VISIBLE);
+                    infoPane_.bringToFront();
+                    footerView_.setVisibility(View.VISIBLE);
+                }
+            });
+        }
+    }
+
+    private void fadeConnectionStatus(final boolean fadeOut) {
+        connecting_.setVisibility(fadeOut ? View.INVISIBLE : View.VISIBLE);
+        connectionText_.setVisibility(fadeOut ? View.INVISIBLE : View.VISIBLE);
+
+        AlphaAnimation fade = new AlphaAnimation(fadeOut ? 1.0f : 0.0f,
+                fadeOut ? 0.0f : 1.0f);
+        fade.setDuration(1000);
+        fade.setFillAfter(true);
+
+        if (!fadeOut)
+            connecting_.spin();
+        else
+            connecting_.stopSpinning();
+
+        connecting_.setAnimation(fade);
+        connectionText_.setAnimation(fade);
     }
 
     private void setupDrawer() {
@@ -194,62 +260,4 @@ public class MainActivity extends ActionBarActivity implements DroneEvent.DroneE
         }
     }
 
-    @Override
-    public void onDroneEvent(DroneEvent event, Drone drone) {
-        if (event == DroneEvent.RADIO_CONNECTED) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    fadeConnectionStatus(false);
-                    connectDisconnectButton_.setText("Disconnect");
-                }
-            });
-
-        } else if (event == DroneEvent.RADIO_DISCONNECTED) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    fadeConnectionStatus(true);
-                    connectDisconnectButton_.setText("Connect");
-                }
-            });
-        } else if (event == DroneEvent.HEARTBEAT_FIRST) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    fadeConnectionStatus(true);
-
-
-                    FragmentManager fragmentManager = getFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.setCustomAnimations(android.R.animator.fade_in,
-                            android.R.animator.fade_out);
-
-                    fragmentTransaction.add(R.id.map_container, mapFragment_, "map");
-                    fragmentTransaction.commit();
-
-
-                    footerView_.setVisibility(View.VISIBLE);
-                }
-            });
-        }
-    }
-
-    private void fadeConnectionStatus(final boolean fadeOut) {
-        connecting_.setVisibility(fadeOut ? View.INVISIBLE : View.VISIBLE);
-        connectionText_.setVisibility(fadeOut ? View.INVISIBLE : View.VISIBLE);
-
-        AlphaAnimation fade = new AlphaAnimation(fadeOut ? 1.0f : 0.0f,
-                fadeOut ? 0.0f : 1.0f);
-        fade.setDuration(1000);
-        fade.setFillAfter(true);
-
-        if (!fadeOut)
-            connecting_.spin();
-        else
-            connecting_.stopSpinning();
-
-        connecting_.setAnimation(fade);
-        connectionText_.setAnimation(fade);
-    }
 }

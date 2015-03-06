@@ -2,25 +2,25 @@ package com.flightcontroller.ui.info_pane;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.flightcontroller.R;
-import com.flightcontroller.model.DroneImp;
-import com.flightcontroller.model.attributes.core.Battery;
-import com.flightcontroller.model.attributes.core.Orientation;
 
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.ArrayList;
 
 /**
  * Created by Nicholas on 1/25/15.
  */
 public class InfoPaneView extends RelativeLayout {
 
-    private Timer updateTimer_;
-    private InfoDataView battery_;
-    private InfoDataView altitude_;
+    private InfoDataView dataView1_;
+    private InfoDataView dataView2_;
+    private InfoDataView dataView3_;
+    private InfoDataView dataView4_;
+
+    private ArrayList<InfoDataView> activeViews_;
+
 
     public InfoPaneView(Context context) {
         super(context);
@@ -39,25 +39,32 @@ public class InfoPaneView extends RelativeLayout {
 
     private void initComponents(Context context) {
         inflate(context, R.layout.info_data_pane, this);
-        battery_ = (InfoDataView) findViewById(R.id.data_view1);
-        altitude_ = (InfoDataView) findViewById(R.id.data_view2);
-        updateTimer_ = new Timer();
-        updateTimer_.scheduleAtFixedRate(updater_, new Date(), 100);
+        dataView1_ = (InfoDataView) findViewById(R.id.data_view1);
+        dataView2_ = (InfoDataView) findViewById(R.id.data_view2);
+        dataView3_ = (InfoDataView) findViewById(R.id.data_view3);
+        dataView4_ = (InfoDataView) findViewById(R.id.data_view4);
+        dataView1_.setPane(this);
+        dataView2_.setPane(this);
+        dataView3_.setPane(this);
+        dataView4_.setPane(this);
+
+        dataView1_.setContentType(InfoDataView.ALTITUDE);
+        dataView2_.setContentType(InfoDataView.BATTERY_CURRENT);
+        dataView3_.setContentType(InfoDataView.BATTERY_VOLTAGE);
+        dataView4_.setContentType(InfoDataView.ALTITUDE);
+        activeViews_ = new ArrayList<>();
+        activeViews_.add(dataView1_);
+        activeViews_.add(dataView2_);
+        activeViews_.add(dataView3_);
+        activeViews_.add(dataView4_);
     }
 
-    private TimerTask updater_ = new TimerTask() {
-        @Override
-        public void run() {
-            post(new Runnable() {
-                     @Override
-                     public void run() {
-                         Battery bat = (Battery) DroneImp.INSTANCE.getDroneAttribute("Battery");
-                         Orientation or = (Orientation) DroneImp.INSTANCE.getDroneAttribute("Orientation");
-                         battery_.setText("Battery", bat.getVoltage() + "V");
-                         altitude_.setText("Altitude", or.getAltitude() + "m");
-                     }
-                 });
-        }
-    };
+    public void removeChild(InfoDataView view) {
+        for (int i = activeViews_.indexOf(view);i < activeViews_.size() - 1;i ++)
+            activeViews_.get(i).setContentType(activeViews_.get(i + 1).getContentType());
+
+        InfoDataView v = activeViews_.remove(activeViews_.size() - 1);
+        ((ViewGroup) v.getParent()).removeView(v);
+    }
 
 }

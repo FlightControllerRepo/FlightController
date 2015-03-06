@@ -16,37 +16,48 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".MainActivity">
 
-    <com.flightcontroller.ui.info_pane.InfoPaneView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
 
     <RelativeLayout
-        android:id="@+id/map_container"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_alignParentRight="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        >
+        android:layout_alignParentBottom="true">
 
-        <com.pnikosis.materialishprogress.ProgressWheel
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:id="@+id/awaiting_connection"
-            android:layout_above="@+id/connection_txb"
-            android:layout_centerHorizontal="true" />
-        <TextView
+        <RelativeLayout
+            android:id="@+id/map_container"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            >
+
+            <com.pnikosis.materialishprogress.ProgressWheel
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/awaiting_connection"
+                android:layout_above="@+id/connection_txb"
+                android:layout_centerHorizontal="true" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:id="@+id/connection_txb"
+                android:text="Awaiting Connection"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                />
+
+        </RelativeLayout>
+
+        <com.flightcontroller.ui.info_pane.InfoPaneView
+            android:id="@+id/info_pane"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:id="@+id/connection_txb"
-            android:text="Awaiting Connection"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            />
-
+            android:layout_height="wrap_content"/>
     </RelativeLayout>
 
     <com.flightcontroller.ui.components.FooterView
