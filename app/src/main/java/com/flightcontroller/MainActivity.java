@@ -136,7 +136,8 @@ public class MainActivity extends ActionBarActivity implements DroneEvent.DroneE
                         public void run() {
                             DroneImp.INSTANCE.postEvent(DroneEvent.HEARTBEAT_FIRST);
                         }
-                    }, 5000);*/
+                    }, 5000);
+                    */
 
                     if (DroneImp.INSTANCE.isConnected())
                         DroneImp.INSTANCE.disconnectRadio();

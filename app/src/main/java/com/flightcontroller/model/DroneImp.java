@@ -94,8 +94,8 @@ public enum DroneImp implements Drone, MavLinkConnectionListener {
 
         if (event == DroneEvent.HEARTBEAT_FIRST) {
             sendPacket(MavLinkGuidedMode.getChangeFlightModePacket(ApmModes.ROTOR_LOITER, this));
-            sendPacket(MavLinkStreamRates.getStreamRequestPacket(this, MAV_DATA_STREAM.MAV_DATA_STREAM_POSITION, 500));
-            sendPacket(MavLinkStreamRates.getStreamRequestPacket(this, MAV_DATA_STREAM.MAV_DATA_STREAM_RAW_SENSORS, 500));
+            sendPacket(MavLinkStreamRates.getStreamRequestPacket(this, MAV_DATA_STREAM.MAV_DATA_STREAM_POSITION, 100));
+            sendPacket(MavLinkStreamRates.getStreamRequestPacket(this, MAV_DATA_STREAM.MAV_DATA_STREAM_RAW_SENSORS, 100));
         }
 
         LogManager.INSTANCE.addEntry("Posting event" + event.name(), LogSeverity.INFO);
@@ -192,7 +192,8 @@ public enum DroneImp implements Drone, MavLinkConnectionListener {
 
 	@Override
 	public boolean isInAir() {
-		return false;
+		Orientation ori = ((Orientation) getDroneAttribute("Orientation"));
+        return ori.getAltitude() > 3;
 	}
 
 	public void addUSBListener(MavLinkConnectionListener listener) {
