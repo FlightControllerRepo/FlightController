@@ -12,20 +12,40 @@ import com.flightcontroller.utils.GeoTools;
 
 public class MavLinkGuidedMode {
 
-    public static MAVLinkPacket getWaypointPacket(Drone drone, double latitude,
-                                              double longitude, double altitude) {
+    public static MAVLinkPacket getWaypointPacketLocal(Drone drone, double dx,
+                                              double dy, double dz) {
         msg_mission_item msg = new msg_mission_item();
         msg.seq = 0;
         msg.current = 2; // TODO use guided mode enum
-        msg.frame = MAV_FRAME.MAV_FRAME_GLOBAL;
+        msg.frame = MAV_FRAME.MAV_FRAME_LOCAL_ENU;
+        msg.command = MAV_CMD.MAV_CMD_NAV_WAYPOINT; //
+        msg.param1 = 0; // TODO use correct parameter
+        msg.param2 = 0; // TODO use correct parameter
+        msg.param3 = 0; // TODO use correct parameter
+        msg.param4 = 0; // TODO use correct parameter
+        msg.x = (float) dx;
+        msg.y = (float) dy;
+        msg.z = (float) dz;
+        msg.autocontinue = 1; // TODO use correct parameter
+        msg.target_system = drone.getSysid();
+        msg.target_component = drone.getCompid();
+        return msg.pack();
+    }
+
+    public static MAVLinkPacket getWaypointPacket(Drone drone, double latitude,
+                                                       double longatude, double dz) {
+        msg_mission_item msg = new msg_mission_item();
+        msg.seq = 0;
+        msg.current = 2; // TODO use guided mode enum
+        msg.frame = MAV_FRAME.MAV_FRAME_GLOBAL_RELATIVE_ALT;
         msg.command = MAV_CMD.MAV_CMD_NAV_WAYPOINT; //
         msg.param1 = 0; // TODO use correct parameter
         msg.param2 = 0; // TODO use correct parameter
         msg.param3 = 0; // TODO use correct parameter
         msg.param4 = 0; // TODO use correct parameter
         msg.x = (float) latitude;
-        msg.y = (float) longitude;
-        msg.z = (float) altitude;
+        msg.y = (float) longatude;
+        msg.z = (float) dz;
         msg.autocontinue = 1; // TODO use correct parameter
         msg.target_system = drone.getSysid();
         msg.target_component = drone.getCompid();

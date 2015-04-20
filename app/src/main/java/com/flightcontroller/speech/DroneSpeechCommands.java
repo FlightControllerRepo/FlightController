@@ -9,7 +9,6 @@ import android.speech.tts.TextToSpeech;
 import com.flightcontroller.MainActivity;
 import com.flightcontroller.model.DroneActions;
 import com.flightcontroller.model.DroneImp;
-import com.flightcontroller.model.attributes.core.Orientation;
 import com.flightcontroller.utils.LogManager;
 
 import java.util.ArrayList;
@@ -182,9 +181,7 @@ public class DroneSpeechCommands {
     private void go(String direction, int distance) {
         if (direction.equals("up") || direction.equals("down")) {
             int delta = direction.equals("up") ? distance : -distance;
-            Orientation orien = (Orientation) DroneImp.INSTANCE.getDroneAttribute("Orientation");
-
-            DroneActions.goToAltitude(DroneImp.INSTANCE, orien.getTargetAltitude() + delta);
+            DroneActions.goAltitude(DroneImp.INSTANCE, delta);
         } else if (RELATIVE_DIRECTION_ANGLES.containsKey(direction)) { //forward, left, backwards, right
             int bearing = RELATIVE_DIRECTION_ANGLES.get(direction);
             DroneActions.goForwardByBearing(DroneImp.INSTANCE, bearing, distance, true);

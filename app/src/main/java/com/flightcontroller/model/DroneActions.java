@@ -10,7 +10,6 @@ import com.flightcontroller.model.attributes.core.Battery;
 import com.flightcontroller.model.attributes.core.GPSPosition;
 import com.flightcontroller.model.attributes.core.HeartbeatMonitor;
 import com.flightcontroller.model.attributes.core.Orientation;
-import com.flightcontroller.utils.GeoTools;
 import com.flightcontroller.utils.LogManager;
 import com.flightcontroller.utils.LogManager.LogSeverity;
 import com.google.android.gms.maps.model.LatLng;
@@ -106,13 +105,15 @@ public class DroneActions {
         drone.sendPacket(MavLinkGuidedMode.getChangeFlightModePacket(ApmModes.ROTOR_LAND, drone));
     }
 
-    public static void goToAltitude(Drone drone, float altmeters) {
+    public static void goAltitude(Drone drone, float daltmeters) {
         if (!drone.isInAir()) return;
 
         //truncate altitude to at least 0
+        Orientation orien = (Orientation) DroneImp.INSTANCE.getDroneAttribute("Orientation");
+        float altmeters = orien.getTargetAltitude() + daltmeters;
         altmeters = Math.max(0, altmeters);
 
-        Orientation orien = (Orientation) drone.getDroneAttribute("Orientation");
+        GPSPosition gps = (GPSPosition) drone.getDroneAttribute("GPSPosition");
         orien.setTargetAltitude(altmeters);
 
         final float finalAltmeters = altmeters;
@@ -127,7 +128,7 @@ public class DroneActions {
             }
         });
         LogManager.INSTANCE.addEntry("Moving to altitude " + altmeters, LogSeverity.INFO);
-        drone.sendPacket(MavLinkGuidedMode.getWaypointPacket(drone, 0, 0, altmeters));
+        drone.sendPacket(MavLinkGuidedMode.getWaypointPacketLocal(drone, 0, 0, daltmeters));
     }
 
     /**
@@ -138,7 +139,7 @@ public class DroneActions {
      * @param location location to move to
      */
     public static void goToPosition(Drone drone, final LatLng location) {
-        //if (!drone.isInAir()) return;
+        if (!drone.isInAir()) return;
 
         Orientation orien = (Orientation) drone.getDroneAttribute("Orientation");
         final float altitude = orien.getTargetAltitude();
@@ -175,14 +176,26 @@ public class DroneActions {
      */
     public static void goForwardByBearing(Drone drone, float meters,
                                           float bearing, boolean relative) {
-        GPSPosition gps = (GPSPosition) drone.getDroneAttribute("GPSPosition");
         Orientation orien = (Orientation) drone.getDroneAttribute("Orientation");
 
-        LatLng currentPos = new LatLng(gps.getLatitude(), gps.getLongitude());
         float gobearing = (relative) ? orien.getTargetYaw() + bearing : bearing;
+        final float x = (float) (meters * Math.sin(Math.toRadians(gobearing)));
+        final float y = (float) (meters * Math.cos(Math.toRadians(gobearing)));
 
-        LatLng pos = GeoTools.newCoordFromBearingAndDistance(currentPos, gobearing, meters);
-        goToPosition(drone, pos);
+        MainActivity.getMainContext().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                DecimalFormat dec = new DecimalFormat("#.##");
+                SnackbarManager.show(
+                        Snackbar.with(MainActivity.getMainContext())
+                                .text("Moving to " + x + " east, " + y + " north"),
+                        MainActivity.getMainContext());
+            }
+        });
+
+        LogManager.INSTANCE.addEntry("Moving to " + x + " east, " + y + " north", LogSeverity.INFO);
+
+        drone.sendPacket(MavLinkGuidedMode.getWaypointPacketLocal(drone, x, y, 0));
     }
 
 	public static void turn(Drone drone, int degrees, boolean relative) {
