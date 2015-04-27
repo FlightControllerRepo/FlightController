@@ -65,6 +65,7 @@ public class InfoPaneView extends RelativeLayout {
                 arrayAdapter.add("Battery Voltage");
                 arrayAdapter.add("Battery Current");
                 arrayAdapter.add("Altitude");
+                arrayAdapter.add("GPS");
 
                 builderSingle.setNegativeButton("Cancel",
                         new DialogInterface.OnClickListener() {
@@ -100,7 +101,7 @@ public class InfoPaneView extends RelativeLayout {
         dataView1_.setContentType(InfoDataView.ALTITUDE);
         dataView2_.setContentType(InfoDataView.BATTERY_CURRENT);
         dataView3_.setContentType(InfoDataView.BATTERY_VOLTAGE);
-        dataView4_.setContentType(InfoDataView.ALTITUDE);
+        dataView4_.setContentType(InfoDataView.GPS);
         activeViews_ = new ArrayList<>();
         activeViews_.add(dataView1_);
         activeViews_.add(dataView2_);
@@ -118,6 +119,8 @@ public class InfoPaneView extends RelativeLayout {
             v.setContentType(InfoDataView.BATTERY_CURRENT);
         else if (type.equals("Altitude"))
             v.setContentType(InfoDataView.ALTITUDE);
+        else if (type.equals("GPS"))
+            v.setContentType(InfoDataView.GPS);
 
         activeViews_.add(v);
         parentView_.addView(v);

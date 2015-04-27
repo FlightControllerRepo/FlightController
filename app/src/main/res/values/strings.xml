@@ -13,7 +13,8 @@
     <string name="disarmed_sb"> Copter has been disarmed </string>
     <string name="armed_sb"> Copter has been armed </string>
     <string name="arm_timeout_sb"> Copter arm/disarm did not complete in time </string>
-
+    <string name="launched_sb"> Copter has launched  </string>
+    <string name="landed_sb"> Copter has landed  </string>
 
 
 

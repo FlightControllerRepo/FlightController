@@ -61,6 +61,9 @@ public class FooterView extends LinearLayout implements DroneEvent.DroneEventLis
             armDisarmBtn_.stopWaiting();
 
             takeoffLandBtn_.setEnabled(DroneImp.INSTANCE.isArmed());
+        } else if (event == DroneEvent.LAUNCHED || event == DroneEvent.LANDED) {
+            takeoffLandBtn_.setText(DroneImp.INSTANCE.isInAir() ? "Land" : "Takeoff");
+            takeoffLandBtn_.stopWaiting();
         }
     }
 

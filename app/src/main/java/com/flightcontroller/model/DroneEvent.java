@@ -21,7 +21,9 @@ public enum DroneEvent {
     GPS_CHANGED(),
     DISARMED(R.string.disarmed_sb, false),
     ARMED(R.string.armed_sb, false),
-    ARM_TIMEOUT(R.string.arm_timeout_sb, true);
+    ARM_TIMEOUT(R.string.arm_timeout_sb, true),
+    LAUNCHED(R.string.launched_sb, false),
+    LANDED(R.string.landed_sb, false);
 
     private String displayText_;
     private boolean isProblem_;

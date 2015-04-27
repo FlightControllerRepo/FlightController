@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.flightcontroller.R;
 import com.flightcontroller.model.DroneImp;
 import com.flightcontroller.model.attributes.core.Battery;
+import com.flightcontroller.model.attributes.core.GPSPosition;
 import com.flightcontroller.model.attributes.core.Orientation;
 
 import java.util.Date;
@@ -24,6 +25,7 @@ public class InfoDataView extends RelativeLayout {
     public static final int BATTERY_VOLTAGE = 0;
     public static final int BATTERY_CURRENT = 1;
     public static final int ALTITUDE = 2;
+    public static final int GPS = 3;
 
     private int contentType_;
 
@@ -78,6 +80,7 @@ public class InfoDataView extends RelativeLayout {
                     public void run() {
                         Battery bat = (Battery) DroneImp.INSTANCE.getDroneAttribute("Battery");
                         Orientation ori = (Orientation) DroneImp.INSTANCE.getDroneAttribute("Orientation");
+                        GPSPosition gps = (GPSPosition) DroneImp.INSTANCE.getDroneAttribute("GPSPosition");
 
                         switch (thisref.contentType_) {
                             case BATTERY_VOLTAGE:
@@ -88,6 +91,9 @@ public class InfoDataView extends RelativeLayout {
                                 break;
                             case ALTITUDE:
                                 thisref.setText("Altitude", ori.getAltitude() + "m");
+                                break;
+                            case GPS:
+                                thisref.setText("GPS", gps.getLatitude() + " " + gps.getLongitude());
                                 break;
                         }
                     }

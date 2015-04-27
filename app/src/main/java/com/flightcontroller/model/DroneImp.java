@@ -11,6 +11,7 @@ import com.flightcontroller.mavlink.command_wrappers.MavLinkStreamRates;
 import com.flightcontroller.mavlink.usb.UsbConnection;
 import com.flightcontroller.model.DroneEvent.DroneEventListener;
 import com.flightcontroller.model.attributes.core.Battery;
+import com.flightcontroller.model.attributes.core.CollisionHandler;
 import com.flightcontroller.model.attributes.core.GPSPosition;
 import com.flightcontroller.model.attributes.core.HeartbeatMonitor;
 import com.flightcontroller.model.attributes.core.Orientation;
@@ -77,6 +78,7 @@ public enum DroneImp implements Drone, MavLinkConnectionListener {
 		addDroneVariable(new HeartbeatMonitor());
 		addDroneVariable(new GPSPosition());
 		addDroneVariable(new Orientation());
+        addDroneVariable(new CollisionHandler());
 	}
 
 	@Override

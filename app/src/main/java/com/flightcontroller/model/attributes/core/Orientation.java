@@ -4,6 +4,8 @@ import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.common.msg_attitude;
 import com.MAVLink.common.msg_vfr_hud;
 import com.flightcontroller.model.DroneAttribute;
+import com.flightcontroller.model.DroneEvent;
+import com.flightcontroller.model.DroneImp;
 
 public class Orientation extends DroneAttribute {
 
@@ -42,7 +44,13 @@ public class Orientation extends DroneAttribute {
 				break;
 			case msg_vfr_hud.MAVLINK_MSG_ID_VFR_HUD:
 				msg_vfr_hud m_hud = (msg_vfr_hud) msg;
+                float oldalt = altitude_;
 				altitude_ = m_hud.alt;
+
+                if (oldalt < 3 && m_hud.alt >= 3)
+                    DroneImp.INSTANCE.postEvent(DroneEvent.LAUNCHED);
+                else if (oldalt >= 1.5f && m_hud.alt < 1.5f)
+                    DroneImp.INSTANCE.postEvent(DroneEvent.LANDED);
 
                 if (targetAltitude_ == -1) targetAltitude_ = altitude_;
 				break;
