@@ -14,6 +14,9 @@ import com.pnikosis.materialishprogress.ProgressWheel;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * A little animated button
+ */
 public class LoadingButton extends RelativeLayout {
 
     private CopyOnWriteArrayList<LoadingButtonListener> listeners_;

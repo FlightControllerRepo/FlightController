@@ -18,10 +18,14 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * Created by Nicholas on 1/25/15.
+ * Holds a data point from the copter to display from the user
+ * These are held in the InfoPaneView. To add more displays
+ * you must add a constant, implement its updater, and add it to the
+ * picker in InfoPaneView
  */
 public class InfoDataView extends RelativeLayout {
 
+    //List of parameters
     public static final int BATTERY_VOLTAGE = 0;
     public static final int BATTERY_CURRENT = 1;
     public static final int ALTITUDE = 2;
@@ -70,6 +74,10 @@ public class InfoDataView extends RelativeLayout {
         bodyText_ = (TextView) findViewById(R.id.body_idv);
     }
 
+    /**
+     * Updater task for this button.
+     * @return
+     */
     private TimerTask getUpdaterTask() {
         final InfoDataView thisref = this;
         return new TimerTask() {

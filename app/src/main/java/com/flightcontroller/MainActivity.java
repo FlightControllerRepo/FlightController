@@ -28,7 +28,9 @@ import com.flightcontroller.ui.info_pane.InfoPaneView;
 import com.flightcontroller.utils.LogManager;
 import com.pnikosis.materialishprogress.ProgressWheel;
 
-
+/**
+ * Our main activity, and entry point for the application
+ */
 public class MainActivity extends ActionBarActivity implements DroneEvent.DroneEventListener {
 
     private static Activity mainContext_;
@@ -48,9 +50,11 @@ public class MainActivity extends ActionBarActivity implements DroneEvent.DroneE
     private TextView connectDisconnectButton_;
     private ImageView speechButton_;
 
+    //speech
     private SpeechHandler speechHandler_;
     private boolean isSpeaking_;
 
+    //minimap/displays
     private MiniMapFragment mapFragment_;
     private InfoPaneView infoPane_;
 

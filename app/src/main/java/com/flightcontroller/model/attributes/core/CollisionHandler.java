@@ -7,6 +7,11 @@ import com.flightcontroller.model.DroneAttribute;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
 
+/**
+ * Experimental class that receives status messages from
+ * our arduino board and posts a collision event
+ * if the status text contains collision.
+ */
 public class CollisionHandler extends DroneAttribute {
 
     private final static int REPORT_INTERVAL = 1000;

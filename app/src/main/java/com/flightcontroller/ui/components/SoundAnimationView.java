@@ -13,7 +13,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * Created by Nicholas on 1/24/15.
+ * A view on the top, which draws the amplitude of the
+ * current sound picked up.
  */
 public class SoundAnimationView extends View {
 

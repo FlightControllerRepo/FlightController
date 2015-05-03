@@ -4,6 +4,10 @@ import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.common.msg_sys_status;
 import com.flightcontroller.model.DroneAttribute;
 
+/**
+ * This call holds the battery information of the copter
+ *
+ */
 public class Battery extends DroneAttribute {
 
 	private float voltage_;

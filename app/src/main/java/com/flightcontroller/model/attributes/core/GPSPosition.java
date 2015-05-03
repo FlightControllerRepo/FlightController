@@ -4,6 +4,11 @@ import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.common.msg_global_position_int;
 import com.flightcontroller.model.DroneAttribute;
 
+/**
+ * This class holds the GPS location of the copter. This class
+ * allows the user to query the correct position of the copter.
+ *
+ */
 public class GPSPosition extends DroneAttribute {
 
 	private float latitude_;

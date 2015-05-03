@@ -7,14 +7,22 @@ import com.flightcontroller.model.DroneAttribute;
 import com.flightcontroller.model.DroneEvent;
 import com.flightcontroller.model.DroneImp;
 
+/**
+ * Attribute that holds the altitude, pitch, roll, and yaw of the copter.
+ * When setting the target altitude, the copter position is not actually affected
+ * until a command is sent.
+ */
 public class Orientation extends DroneAttribute {
 
+    //current altitude
 	private float altitude_;
+    //target altitude for next mission
     private float targetAltitude_;
 
 	private float pitch_;
 	private float roll_;
 
+    //target yaw for next mission
     private float targetYaw_;
 	private float yaw_;
 
@@ -47,7 +55,8 @@ public class Orientation extends DroneAttribute {
                 float oldalt = altitude_;
 				altitude_ = m_hud.alt;
 
-                if (oldalt < 3 && m_hud.alt >= 3)
+                //TODO this should be tweeked.
+                if (oldalt < 3 && m_hud.alt >= 3) //need to post events for launch/land
                     DroneImp.INSTANCE.postEvent(DroneEvent.LAUNCHED);
                 else if (oldalt >= 1.5f && m_hud.alt < 1.5f)
                     DroneImp.INSTANCE.postEvent(DroneEvent.LANDED);

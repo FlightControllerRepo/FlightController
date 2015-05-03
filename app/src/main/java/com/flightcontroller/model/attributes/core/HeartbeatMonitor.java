@@ -11,6 +11,13 @@ import com.flightcontroller.model.DroneEvent;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * This attribute handles heartbeats from the user. Heartbeats
+ * hold important information, such as if the copter is armed, its
+ * current mode, and other attributes. If no heartbeat is received
+ * after a set interval, this will fire a timeout event
+ *
+ */
 public class HeartbeatMonitor extends DroneAttribute {
 	
 	private static final int HEARTBEAT_TIMEOUT = 10000;
@@ -45,6 +52,7 @@ public class HeartbeatMonitor extends DroneAttribute {
 			LogManager.INSTANCE.addEntry("Received first heartbeat!", LogSeverity.INFO);
             previousHeartbeat_ = (msg_heartbeat) msg;
             firstHeartbeat_ = false;
+            //post a heartbeat event
 			drone_.postEvent(DroneEvent.HEARTBEAT_FIRST);
 		} else {
 			msg_heartbeat currentHeartbeat_ = (msg_heartbeat) msg;

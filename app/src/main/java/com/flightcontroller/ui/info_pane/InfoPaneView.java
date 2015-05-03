@@ -16,7 +16,9 @@ import com.flightcontroller.R;
 import java.util.ArrayList;
 
 /**
- * Created by Nicholas on 1/25/15.
+ * A pane view on the right side of the screen, which holds
+ * information collected from the copter. These panes can be closed
+ * and opened with new viewing options.
  */
 public class InfoPaneView extends RelativeLayout {
 

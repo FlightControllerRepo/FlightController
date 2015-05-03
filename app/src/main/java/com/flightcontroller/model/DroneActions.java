@@ -105,6 +105,12 @@ public class DroneActions {
         drone.sendPacket(MavLinkGuidedMode.getChangeFlightModePacket(ApmModes.ROTOR_LAND, drone));
     }
 
+    /**
+     * Sets the current altitude
+     *
+     * @param drone
+     * @param daltmeters relative altitude
+     */
     public static void goAltitude(Drone drone, float daltmeters) {
         if (!drone.isInAir()) return;
 

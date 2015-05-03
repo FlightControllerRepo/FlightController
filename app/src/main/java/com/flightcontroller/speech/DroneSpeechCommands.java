@@ -18,6 +18,7 @@ import java.util.Map;
 
 /**
 * Class to parse the recognized speech into commands for the quadcopter.
+ * The parsed commands are then run using the DroneActions class.
 */
 public class DroneSpeechCommands {
 
